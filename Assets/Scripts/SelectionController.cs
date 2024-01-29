@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Cinemachine;
 using DG.Tweening;
+using System;
 
 public class SelectionController : MonoBehaviour
 {
@@ -12,8 +13,9 @@ public class SelectionController : MonoBehaviour
     [SerializeField] private List<House> _houses;
     [SerializeField] private House _currentHouse;
     [SerializeField] private CinemachineVirtualCamera _playerCamera;
-    [SerializeField] private Button _nextButton, _previousButton;
+    [SerializeField] private Button _nextButton, _previousButton, _playButton, _playButton2, _upgradeButton;
     [SerializeField] private RectTransform _arrowRectTransform;
+    private List<Coroutine> _cameraSwitchCoroutines = new List<Coroutine>();
 
     private void Start()
     {
@@ -24,54 +26,46 @@ public class SelectionController : MonoBehaviour
 
     public void NextCamera()
     {
+        for (int i = 0; i < _cameraSwitchCoroutines.Count; i++) // gereksiz
+        {
+            StopCoroutine(_cameraSwitchCoroutines[i]);
+        }
 
         // decrease previous camera's priority before next
-        if (_currentCameraIndex == 0)
-        {
-            _playerCamera.Priority--;
-        }
-        else
-        {
-            _currentHouse.DecreaseCameraPriority();
-        }
+        DecreasePreviousCameraPriority();
 
         // set next camera
         _currentCameraIndex++;
 
         // increase next camera's priority
 
-        if (_currentCameraIndex == 0) // bu gereksiz 
+        if (_currentCameraIndex == 0)
         {
-            _previousButton.gameObject.SetActive(false);
+            Coroutine a = StartCoroutine(DelayButtonSetActive(SetButtonsSetActiveOnPlayer, 2f, false));
+            _cameraSwitchCoroutines.Add(a);
+
+            
             _playerCamera.Priority++;
         }
         else
         {
+            StartCoroutine(DelayButtonSetActive(SetButtonsSetActiveOnHouse, 2f, true));
+
             _currentHouse = _houses[_currentCameraIndex - 1];
-            _previousButton.gameObject.SetActive(true);
             _currentHouse.IncreaseCameraPriority();
         }
-
-        // check is camera last?
-        if (_currentCameraIndex == _houses.Count)
-        {
-            _nextButton.gameObject.SetActive(false);
-        }
-
     }
 
     public void PreviousCamera()
     {
+        //stop all camera switch coroutines
+        for (int i = 0; i < _cameraSwitchCoroutines.Count; i++) // gereksiz
+        {
+            StopCoroutine(_cameraSwitchCoroutines[i]);
+        }
 
         // decrease previous camera's priority before next
-        if (_currentCameraIndex == 0)
-        {
-            _playerCamera.Priority--;
-        }
-        else
-        {
-            _currentHouse.DecreaseCameraPriority();
-        }
+        DecreasePreviousCameraPriority();
 
         // set next camera
         _currentCameraIndex--;
@@ -79,18 +73,66 @@ public class SelectionController : MonoBehaviour
         // increase next camera's priority
         if (_currentCameraIndex == 0)
         {
-            _previousButton.gameObject.SetActive(false);
+            Coroutine a = StartCoroutine(DelayButtonSetActive(SetButtonsSetActiveOnPlayer, 2f,false));
+            _cameraSwitchCoroutines.Add(a);
+
             _playerCamera.Priority++;
         }
         else
         {
+            // hold switch camera coroutine for we need cancel
+            Coroutine a = StartCoroutine(DelayButtonSetActive(SetButtonsSetActiveOnHouse, 2f,true));
+            _cameraSwitchCoroutines.Add(a);
+
+
             _currentHouse = _houses[_currentCameraIndex - 1];
-            _previousButton.gameObject.SetActive(true);
             _currentHouse.IncreaseCameraPriority();
         }
+    }
 
-        // setactive true for if we set it false
-        _nextButton.gameObject.SetActive(true);
+    public void DecreasePreviousCameraPriority()
+    {
+        if (_currentCameraIndex == 0)
+        {
+            _playerCamera.Priority--;
+        }
+        else
+        {
+            _currentHouse.DecreaseCameraPriority();
+        }
+    }
+
+    public void SetButtonsSetActiveOnHouse()
+    {
+        _playButton2.gameObject.SetActive(true);
+    }
+
+    public void SetButtonsSetActiveOnPlayer()
+    {
+        _playButton.gameObject.SetActive(true);
+        _upgradeButton.gameObject.SetActive(true);
+    }
+
+    IEnumerator DelayButtonSetActive(Action action, float delayTime, bool isPerviousButtonActive)
+    {
+        _nextButton.gameObject.SetActive(false);
+        _previousButton.gameObject.SetActive(false);
+        _playButton.gameObject.SetActive(false);
+        _playButton2.gameObject.SetActive(false);
+        _upgradeButton.gameObject.SetActive(false);
+
+        yield return new WaitForSeconds(delayTime);
+
+        _previousButton.gameObject.SetActive(isPerviousButtonActive);
+        if (_currentCameraIndex == _houses.Count)
+        {
+            _nextButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            _nextButton.gameObject.SetActive(true);
+        }
+        action();
     }
 
 }
