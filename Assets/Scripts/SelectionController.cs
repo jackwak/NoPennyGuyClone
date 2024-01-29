@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Cinemachine;
+using DG.Tweening;
 
 public class SelectionController : MonoBehaviour
 {
@@ -12,10 +13,13 @@ public class SelectionController : MonoBehaviour
     [SerializeField] private House _currentHouse;
     [SerializeField] private CinemachineVirtualCamera _playerCamera;
     [SerializeField] private Button _nextButton, _previousButton;
+    [SerializeField] private RectTransform _arrowRectTransform;
 
     private void Start()
     {
         _previousButton.gameObject.SetActive(false);
+
+        _arrowRectTransform.DOAnchorPosY(4.7f, 1f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
     }
 
     public void NextCamera()
