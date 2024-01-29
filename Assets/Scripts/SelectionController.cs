@@ -24,6 +24,7 @@ public class SelectionController : MonoBehaviour
         _arrowRectTransform.DOAnchorPosY(4.7f, 1f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
     }
 
+
     public void NextCamera()
     {
         for (int i = 0; i < _cameraSwitchCoroutines.Count; i++) // gereksiz
@@ -41,7 +42,7 @@ public class SelectionController : MonoBehaviour
 
         if (_currentCameraIndex == 0)
         {
-            Coroutine a = StartCoroutine(DelayButtonSetActive(SetButtonsSetActiveOnPlayer, 2f, false));
+            Coroutine a = StartCoroutine(DelayButtonSetActive(SetButtonsActiveOnPlayer, 2f, false));
             _cameraSwitchCoroutines.Add(a);
 
             
@@ -49,7 +50,7 @@ public class SelectionController : MonoBehaviour
         }
         else
         {
-            StartCoroutine(DelayButtonSetActive(SetButtonsSetActiveOnHouse, 2f, true));
+            StartCoroutine(DelayButtonSetActive(SetButtonsActiveOnHouse, 2f, true));
 
             _currentHouse = _houses[_currentCameraIndex - 1];
             _currentHouse.IncreaseCameraPriority();
@@ -73,7 +74,7 @@ public class SelectionController : MonoBehaviour
         // increase next camera's priority
         if (_currentCameraIndex == 0)
         {
-            Coroutine a = StartCoroutine(DelayButtonSetActive(SetButtonsSetActiveOnPlayer, 2f,false));
+            Coroutine a = StartCoroutine(DelayButtonSetActive(SetButtonsActiveOnPlayer, 2f,false));
             _cameraSwitchCoroutines.Add(a);
 
             _playerCamera.Priority++;
@@ -81,7 +82,7 @@ public class SelectionController : MonoBehaviour
         else
         {
             // hold switch camera coroutine for we need cancel
-            Coroutine a = StartCoroutine(DelayButtonSetActive(SetButtonsSetActiveOnHouse, 2f,true));
+            Coroutine a = StartCoroutine(DelayButtonSetActive(SetButtonsActiveOnHouse, 2f,true));
             _cameraSwitchCoroutines.Add(a);
 
 
@@ -102,12 +103,12 @@ public class SelectionController : MonoBehaviour
         }
     }
 
-    public void SetButtonsSetActiveOnHouse()
+    public void SetButtonsActiveOnHouse()
     {
         _playButton2.gameObject.SetActive(true);
     }
 
-    public void SetButtonsSetActiveOnPlayer()
+    public void SetButtonsActiveOnPlayer()
     {
         _playButton.gameObject.SetActive(true);
         _upgradeButton.gameObject.SetActive(true);
