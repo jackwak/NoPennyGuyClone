@@ -22,6 +22,12 @@ public class SelectionController : MonoBehaviour
         _previousButton.gameObject.SetActive(false);
 
         _arrowRectTransform.DOAnchorPosY(4.7f, 1f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
+
+        UIIdleAnimation(_nextButton.transform);
+        UIIdleAnimation(_previousButton.transform);
+        UIIdleAnimation(_playButton.transform);
+        UIIdleAnimation(_upgradeButton.transform);
+        UIIdleAnimation(_playButton2.transform);
     }
 
 
@@ -111,10 +117,12 @@ public class SelectionController : MonoBehaviour
     public void SetButtonsActiveOnPlayer()
     {
         _playButton.gameObject.SetActive(true);
+
+
         _upgradeButton.gameObject.SetActive(true);
     }
 
-    IEnumerator DelayButtonSetActive(Action action, float delayTime, bool isPerviousButtonActive)
+    IEnumerator DelayButtonSetActive(Action action, float delayTime, bool PerviousButtonActive)
     {
         _nextButton.gameObject.SetActive(false);
         _previousButton.gameObject.SetActive(false);
@@ -123,8 +131,11 @@ public class SelectionController : MonoBehaviour
         _upgradeButton.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(delayTime);
+        if (PerviousButtonActive == true)
+        {
+            _previousButton.gameObject.SetActive(PerviousButtonActive);
+        }
 
-        _previousButton.gameObject.SetActive(isPerviousButtonActive);
         if (_currentCameraIndex == _houses.Count)
         {
             _nextButton.gameObject.SetActive(false);
@@ -136,4 +147,9 @@ public class SelectionController : MonoBehaviour
         action();
     }
 
+
+    void UIIdleAnimation(Transform t)
+    {
+        t.DOScale(t.localScale + new Vector3(.2f, .2f, .2f), .5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
+    }
 }

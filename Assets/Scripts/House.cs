@@ -17,9 +17,6 @@ public class House : MonoBehaviour
         camera = transform.Find("CM vcam1").GetComponent<CinemachineVirtualCamera>();
     }
 
-
-    
-
     public void IncreaseCameraPriority()
     {
         camera.Priority++;
