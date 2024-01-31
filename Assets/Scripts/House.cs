@@ -4,11 +4,12 @@ using UnityEngine;
 using Cinemachine;
 public class House : MonoBehaviour
 {
+    [SerializeField] private GameObject _houseScene;
     [SerializeField] private int _houseIndex;
     [SerializeField] private CinemachineVirtualCamera camera;
     [SerializeField] private int _levelCount = 5;
 
-
+    public GameObject HouseScene { get { return _houseScene; } }
     public int GetHouseIndex { get => _houseIndex; }
 
 
