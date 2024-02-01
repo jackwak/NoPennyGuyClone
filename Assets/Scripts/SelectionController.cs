@@ -8,6 +8,8 @@ using System;
 
 public class SelectionController : MonoBehaviour
 {
+    public static SelectionController Instance;
+
     [SerializeField] int _currentCameraIndex = 0;  // 0 is player cam
 
     [SerializeField] private List<House> _houses;
@@ -15,7 +17,21 @@ public class SelectionController : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera _playerCamera;
     [SerializeField] private Button _nextButton, _previousButton, _playButton, _playButton2, _upgradeButton;
     [SerializeField] private RectTransform _arrowRectTransform;
-    private List<Coroutine> _cameraSwitchCoroutines = new List<Coroutine>();
+    [SerializeField] private List<Coroutine> _cameraSwitchCoroutines = new List<Coroutine>();
+
+    public House GetCurrentHouse { get => _currentHouse; }
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     private void Start()
     {
@@ -148,8 +164,10 @@ public class SelectionController : MonoBehaviour
     }
 
 
-    void UIIdleAnimation(Transform t)
+    public void UIIdleAnimation(Transform t)
     {
         t.DOScale(t.localScale + new Vector3(.2f, .2f, .2f), .5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
     }
+
+
 }

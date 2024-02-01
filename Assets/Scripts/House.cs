@@ -8,6 +8,7 @@ public class House : MonoBehaviour
     [SerializeField] private int _houseIndex;
     [SerializeField] private CinemachineVirtualCamera camera;
     [SerializeField] private int _levelCount = 5;
+    public bool IsOpen;
 
     public GameObject HouseScene { get { return _houseScene; } }
     public int GetHouseIndex { get => _houseIndex; }
