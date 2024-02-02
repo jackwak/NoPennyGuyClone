@@ -28,9 +28,18 @@ public class SceneManager : MonoBehaviour
     }
 
 
-    public void LoadLevel() // bu fonksşyonu karakter kamerasındayken oynaya basıldığında çalışıcak hale getir. bu haliyle sadece gördüğü sahneyi açar
-    {// açık housela levelı save managera kaydet. eğer get curren house doluysa onun levelını yükle boşsa en sonki houseun levelını yükle
-        House house = SelectionController.Instance.GetCurrentHouse;
+    public void LoadLevel() 
+    {
+        House house;
+        if (SelectionController.Instance.GetCurrentHouse != null)
+        {
+            house = SelectionController.Instance.GetCurrentHouse;
+        }
+        else
+        {
+            house = SelectionController.Instance.Houses[SaveManager.Instance.LastOpenedHouseIndex];
+        }
+         // levelın datalarını house a yükle
 
 
         // disappear start scene

@@ -12,7 +12,7 @@ public class SelectionController : MonoBehaviour
 
     [SerializeField] int _currentCameraIndex = 0;  // 0 is player cam
 
-    [SerializeField] private List<House> _houses;
+    [SerializeField] public List<House> Houses;
     [SerializeField] private House _currentHouse;
     [SerializeField] private CinemachineVirtualCamera _playerCamera;
     [SerializeField] private Button _nextButton, _previousButton, _playButton, _playButton2, _upgradeButton;
@@ -74,7 +74,7 @@ public class SelectionController : MonoBehaviour
         {
             StartCoroutine(DelayButtonSetActive(SetButtonsActiveOnHouse, 2f, true));
 
-            _currentHouse = _houses[_currentCameraIndex - 1];
+            _currentHouse = Houses[_currentCameraIndex - 1];
             _currentHouse.IncreaseCameraPriority();
         }
     }
@@ -103,12 +103,12 @@ public class SelectionController : MonoBehaviour
         }
         else
         {
-            // hold switch camera coroutine for we need cancel
+            // hold coroutine for we need cancel
             Coroutine a = StartCoroutine(DelayButtonSetActive(SetButtonsActiveOnHouse, 2f,true));
             _cameraSwitchCoroutines.Add(a);
 
 
-            _currentHouse = _houses[_currentCameraIndex - 1];
+            _currentHouse = Houses[_currentCameraIndex - 1];
             _currentHouse.IncreaseCameraPriority();
         }
     }
@@ -152,7 +152,7 @@ public class SelectionController : MonoBehaviour
             _previousButton.gameObject.SetActive(PerviousButtonActive);
         }
 
-        if (_currentCameraIndex == _houses.Count)
+        if (_currentCameraIndex == Houses.Count)
         {
             _nextButton.gameObject.SetActive(false);
         }
