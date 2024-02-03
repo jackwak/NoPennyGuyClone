@@ -1,13 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
+    public static LevelManager Instance;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private GameObject FoodHolder;
     private House _currentHouse;
     private GameObject FoodTaskPanel;
-    private List<Food> _taskFoods;
+    private List<Food> _taskFoods = new List<Food>();
 
     public void InitializeLevel(House house)
     {
@@ -31,8 +46,11 @@ public class LevelManager : MonoBehaviour
         // initialize task food ui
         for (int i = 0; i < taskFoodCount; i++)
         {
-            FoodTaskPanel.transform.GetChild(i).gameObject.SetActive(true);
-            _taskFoods[i] = _currentHouse.Levels[level].TaskFoods[i];
+            Image foodImage = FoodTaskPanel.transform.GetChild(i).GetComponent<Image>();
+            foodImage.gameObject.SetActive(true);
+
+            foodImage.sprite = _currentHouse.Levels[i].TaskFoods[i].Sprite;
+            _taskFoods.Add(_currentHouse.Levels[level].TaskFoods[i]);
         }
 
 
@@ -44,4 +62,16 @@ public class LevelManager : MonoBehaviour
 
 
     }
+
+
+    public void ClearVariables()
+    {
+        _taskFoods.Clear();
+        FoodTaskPanel = null;
+        FoodHolder = null;
+        _currentHouse = null;
+    }
+
+
+
 }

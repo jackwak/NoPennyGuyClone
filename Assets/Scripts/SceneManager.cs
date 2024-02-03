@@ -39,11 +39,13 @@ public class SceneManager : MonoBehaviour
         {
             house = SelectionController.Instance.Houses[SaveManager.Instance.LastOpenedHouseIndex];
         }
-         // levelın datalarını house a yükle
-
-
         // disappear start scene
         _currentScene.SetActive(false);
+
+        // levelın datalarını house a yükle
+        LevelManager.Instance.InitializeLevel(house);
+
+        
 
 
 
