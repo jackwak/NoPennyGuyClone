@@ -49,7 +49,7 @@ public class SceneManager : MonoBehaviour
 
         
         // appear loaded scene
-        house.HouseScene.SetActive(true);
+        house.GetHouseScene.SetActive(true);
 
         // save loaded scene to current scene
         _currentScene = house.gameObject;

@@ -15,3 +15,4 @@ MonoBehaviour:
   Name: Hamburger
   Sprite: {fileID: 21300000, guid: 0bd4052bbac8ad140bd28555599fdbc6, type: 3}
   Price: 50
+  Prefab: {fileID: 3979734220394900393, guid: 5a3a86b952929854bb40614bc9f8ad32, type: 3}

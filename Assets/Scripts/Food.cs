@@ -8,4 +8,5 @@ public class Food : ScriptableObject
     public string Name;
     public Sprite Sprite;
     public int Price;
+    public GameObject Prefab;
 }
