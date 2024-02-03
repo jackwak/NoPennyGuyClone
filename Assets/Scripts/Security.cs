@@ -6,18 +6,23 @@ using DG.Tweening;
 
 public class Security : Worker
 {
-    [SerializeField] 
+    [SerializeField]
     private Transform[] _patrolPoints;
     [SerializeField]
     private Transform _lookPoint;
     private NavMeshAgent _agent;
     private bool _isRotating = false;
+    private Animator _animator;
 
     private int _currentPatrolIndex = 0;
+
+    public float pathEndThreshold = 0.1f;
+    private bool hasPath = false;
 
 
     private void Start()
     {
+        _animator = GetComponent<Animator>();
         _agent = GetComponent<NavMeshAgent>();
         MoveToNextPatrolPoint();
     }
@@ -27,24 +32,45 @@ public class Security : Worker
     {
         _currentPatrolIndex++;
 
-        _agent.SetDestination(_patrolPoints[_currentPatrolIndex].position);
+        _agent.SetDestination(_patrolPoints[_currentPatrolIndex % _patrolPoints.Length].position);
+        _animator.SetBool("isWalking", true);
         _isRotating = false;
     }
 
     private void Update()
     {
-        if (!_isRotating &&HasReachedDestination())
+        if (!_isRotating && AtEndOfPath())
         {
             _isRotating = true;
-            transform.DOLookAt(_lookPoint.position, 1f).SetEase(Ease.InBounce).OnComplete(MoveToNextPatrolPoint);// DÖNÜÞTE SIKINTI VAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            int a = Random.Range(1, 4);
+            transform.DOLookAt(_lookPoint.position, a).SetEase(Ease.Linear).OnComplete(() => StartCoroutine(Wait()));
         }
     }
 
-    bool HasReachedDestination()
+    bool AtEndOfPath()
     {
-        // Agent hareket halindeyse ve hedefe kalan mesafe, agent'ýn durma mesafesinden az veya eþitse
-        // ve agent'ýn yolu tamamlanmýþsa (pathPending false ise)
-        return !_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance && _agent.hasPath;
+        hasPath |= _agent.hasPath;
+        if (hasPath && _agent.remainingDistance <= _agent.stoppingDistance + pathEndThreshold)
+        {
+            // Arrived
+            hasPath = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    IEnumerator Wait()
+    {
+        _animator.SetBool("isWalking", false);
+        int a = Random.Range(3,5);
+
+        yield return new WaitForSeconds(a);
+
+        MoveToNextPatrolPoint();
     }
 }
+
+
+
 
