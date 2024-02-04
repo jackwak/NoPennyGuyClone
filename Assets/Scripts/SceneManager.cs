@@ -8,6 +8,7 @@ public class SceneManager : MonoBehaviour
 
     [SerializeField] private GameObject[] _scenes; // start scene is 0 index
     private GameObject _currentScene;
+    Cinemachine.CinemachineBrain _cinemachineBrain;
 
 
     private void Awake()
@@ -25,10 +26,11 @@ public class SceneManager : MonoBehaviour
     private void Start()
     {
         _currentScene = _scenes[0];
+        _cinemachineBrain = GameObject.Find("Main Camera").GetComponent<Cinemachine.CinemachineBrain>();
     }
 
 
-    public void LoadLevel() 
+    public void LoadLevel()
     {
         House house;
         if (SelectionController.Instance.GetCurrentHouse != null)
@@ -39,17 +41,22 @@ public class SceneManager : MonoBehaviour
         {
             house = SelectionController.Instance.Houses[SaveManager.Instance.LastOpenedHouseIndex];
         }
+
+        // set to 0 the cinemachine brain's switch camera time
+        _cinemachineBrain.enabled = false;
+        _cinemachineBrain.m_DefaultBlend.m_Time = 0;
+        _cinemachineBrain.enabled = true;
+
         // disappear start scene
         _currentScene.SetActive(false);
 
         // levelın datalarını house a yükle
         LevelManager.Instance.InitializeLevel(house);
 
-        
 
 
 
-        
+
         // appear loaded scene
         house.GetHouseScene.SetActive(true);
 
@@ -59,6 +66,8 @@ public class SceneManager : MonoBehaviour
 
     public void LoadStartScene()
     {
+        //
+
         //disappear current scene
         _currentScene.SetActive(false);
 

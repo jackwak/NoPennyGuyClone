@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class LevelManager : MonoBehaviour
 {
@@ -46,7 +47,7 @@ public class LevelManager : MonoBehaviour
         // initialize task food ui
         for (int i = 0; i < taskFoodCount; i++)
         {
-            Image foodImage = FoodTaskPanel.transform.GetChild(i).GetComponent<Image>();
+            Image foodImage = FoodTaskPanel.transform.Find("Images").transform.GetChild(i).GetComponent<Image>();
             foodImage.gameObject.SetActive(true);
 
             foodImage.sprite = _currentHouse.Levels[i].TaskFoods[i].Sprite;
@@ -60,7 +61,26 @@ public class LevelManager : MonoBehaviour
             Instantiate(_taskFoods[j].Prefab, FoodHolder.transform.GetChild(j));
         }
 
+        FoodTaskPanelMove();
 
+
+    }
+
+    public void FoodTaskPanelMove()
+    {
+        //set to middle of camera the Food task panel
+        Vector3 foodTaskPanelPosition = FoodTaskPanel.transform.position;
+        Vector3 foodTaskPanelScale = FoodTaskPanel.transform.localScale;
+        Vector3 middleOfCamera = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0));
+        FoodTaskPanel.transform.position = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0);
+        FoodTaskPanel.transform.DOScale(2f, 1f).From(Vector3.zero).SetUpdate(true);
+
+
+        //set time scale to 0 for goal anim
+        Time.timeScale = 0;
+
+        FoodTaskPanel.transform.DOMove(foodTaskPanelPosition, 1f).SetUpdate(true).SetDelay(2f);
+        FoodTaskPanel.transform.DOScale(foodTaskPanelScale, 1f).SetUpdate(true).SetDelay(2f).OnComplete(()=>TutorialManager.Instance.GetTutorial(0));
     }
 
 
@@ -72,6 +92,7 @@ public class LevelManager : MonoBehaviour
         _currentHouse = null;
     }
 
-
-
+    void GetTutorial()
+    {
+    }
 }
