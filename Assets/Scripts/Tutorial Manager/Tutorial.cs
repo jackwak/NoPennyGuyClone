@@ -6,4 +6,6 @@ using UnityEngine;
 public class Tutorial
 {
     public TutorialStep[] step;
+    public GameObject tutorialGO;
+
 }

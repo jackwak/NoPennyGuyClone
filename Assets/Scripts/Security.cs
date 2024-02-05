@@ -54,7 +54,7 @@ public class Security : Worker
                 if (!_isRotating && AtEndOfPath())
                 {
                     _isRotating = true;
-                    int a = Random.Range(1, 4);
+                    float a = Random.Range(1, 3);
                     _animator.SetBool("isWalking", false);
                     transform.DOLookAt(_lookPoint.position, a).SetEase(Ease.Linear).OnComplete(() => StartCoroutine(Wait()));
                 }
@@ -81,7 +81,7 @@ public class Security : Worker
 
     IEnumerator Wait()
     {
-        int a = Random.Range(3,5);
+        float a = Random.Range(3,5);
 
         yield return new WaitForSeconds(a);
 

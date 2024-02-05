@@ -91,8 +91,4 @@ public class LevelManager : MonoBehaviour
         FoodHolder = null;
         _currentHouse = null;
     }
-
-    void GetTutorial()
-    {
-    }
 }

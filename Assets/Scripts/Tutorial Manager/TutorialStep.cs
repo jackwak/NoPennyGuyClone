@@ -6,4 +6,5 @@ using UnityEngine;
 public class TutorialStep
 {
     public RectTransform[] HandRectTransforms;
+    public GameObject stepGO;
 }
