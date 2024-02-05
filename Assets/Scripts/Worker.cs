@@ -15,7 +15,9 @@ public abstract class Worker : MonoBehaviour
     public float pathEndThreshold = 0.1f;
     [HideInInspector]
     public bool hasPath = false;
+    [HideInInspector]
     public Transform[] _patrolPoints;
+    public Transform _patrolPointsHolder;
     [HideInInspector]
     public int _currentPatrolIndex = 0;
 
@@ -29,6 +31,11 @@ public abstract class Worker : MonoBehaviour
     private void Start()
     {
         _state = State.PATROL;
+
+        for (int i = 0; i < _patrolPointsHolder.childCount; i++)
+        {
+            _patrolPoints[i] = _patrolPointsHolder.GetChild(i);
+        }
     }
 
     private void OnTriggerEnter(Collider other)

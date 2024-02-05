@@ -5,6 +5,8 @@ using UnityEngine.AI;
 
 public class Waiter : Worker
 {
+    private bool _isWaiting = false;
+
     private void Start()
     {
         _animator = GetComponent<Animator>();
@@ -19,10 +21,20 @@ public class Waiter : Worker
         switch (_state)
         {
             case State.PATROL:
-                if (AtEndOfPath())
+                if (AtEndOfPath() && !_isWaiting)
                 {
                     _animator.SetBool("isWalking", false);
-                    MoveToNextPatrolPoint();
+
+                    // if waiter between FoodSpawner
+                    if (_currentPatrolIndex % _patrolPoints.Length == 0)
+                    {
+                        StartCoroutine(Wait(2f));
+                    }
+                    else
+                    {
+                        MoveToNextPatrolPoint();
+                    }
+                    Debug.Log("a");
                 }
                 break;
             case State.CATCH:
@@ -38,11 +50,22 @@ public class Waiter : Worker
         _agent.SetDestination(_patrolPoints[_currentPatrolIndex % _patrolPoints.Length].position);
         _animator.SetBool("isWalking", true);
 
-        // waiter bir yere ulaþtýktan sonra 1 saniye beklesin sonra yürüsün
     }
 
     private void OnDisable()
     {
         PlayerCatched -= OnPlayerCatched;
     }
+
+    IEnumerator Wait(float time)
+    {
+        _isWaiting = true;
+
+        yield return new WaitForSeconds(time);
+
+        MoveToNextPatrolPoint();
+
+        _isWaiting = false;
+    }
 }
+
