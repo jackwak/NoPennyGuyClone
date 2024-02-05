@@ -6,36 +6,17 @@ using DG.Tweening;
 
 public class Security : Worker
 {
-    private State _state = new State();
-    [SerializeField]
-    private Transform[] _patrolPoints;
     [SerializeField]
     private Transform _lookPoint;
-    private NavMeshAgent _agent;
     private bool _isRotating = false;
-    private Animator _animator;
-
-    private int _currentPatrolIndex = 0;
-
-    public float pathEndThreshold = 0.1f;
-    private bool hasPath = false;
-
-    //Actions
-    public static System.Action PlayerCatched;
-
-    private void OnEnable()
-    {
-        PlayerCatched += OnPlayerCatched;
-    }
 
     private void Start()
     {
-        _state = State.PATROL;
         _animator = GetComponent<Animator>();
         _agent = GetComponent<NavMeshAgent>();
+
         MoveToNextPatrolPoint();
     }
-
 
     public void MoveToNextPatrolPoint()
     {
@@ -66,19 +47,6 @@ public class Security : Worker
         
     }
 
-    bool AtEndOfPath()
-    {
-        hasPath |= _agent.hasPath;
-        if (hasPath && _agent.remainingDistance <= _agent.stoppingDistance + pathEndThreshold)
-        {
-            // Arrived
-            hasPath = false;
-            return true;
-        }
-
-        return false;
-    }
-
     IEnumerator Wait()
     {
         float a = Random.Range(3,5);
@@ -87,24 +55,9 @@ public class Security : Worker
 
         MoveToNextPatrolPoint();
     }
-
-    public void OnPlayerCatched()
-    {
-        //set catch state
-        _state = State.CATCH;
-    }
-
-    private void OnDisable()
-    {
-        PlayerCatched -= OnPlayerCatched;
-    }
 }
 
-enum State
-{
-    PATROL,
-    CATCH
-}
+
 
 
 
