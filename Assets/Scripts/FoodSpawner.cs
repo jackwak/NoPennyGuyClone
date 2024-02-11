@@ -4,13 +4,28 @@ using UnityEngine;
 
 public class FoodSpawner : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Waiter"))
-        {
-            // give the hand of waiter
+    [HideInInspector]
+    public bool isFoodOnTable;
 
-            //destroy 0. index
-        }
+
+    private void Start()
+    {
+        SpawnFood();
+    }
+
+    public void SpawnFood()
+    {
+        int r = Random.Range(0, LevelManager.Instance.TaskFoodGO.Count);
+
+        Instantiate(LevelManager.Instance.TaskFoodGO[r], transform);
+
+        isFoodOnTable = true;
+    }
+
+    public IEnumerator DelaySpawnFood(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        SpawnFood();
     }
 }

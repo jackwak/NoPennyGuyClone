@@ -34,7 +34,6 @@ public class Waiter : Worker
                     {
                         MoveToNextPatrolPoint();
                     }
-                    Debug.Log("a");
                 }
                 break;
             case State.CATCH:

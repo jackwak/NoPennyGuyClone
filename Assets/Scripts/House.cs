@@ -8,8 +8,8 @@ public class House : MonoBehaviour
     [SerializeField] private int _houseIndex;
     private CinemachineVirtualCamera camera;
     [SerializeField] private int _levelCount = 5;
-    public int LastOpenedLevelIndex = 0;
-    public bool IsOpen;
+    public int LastOpenedLevelIndex = 0; // bunu playerprefle tutman gerekebilir
+    [HideInInspector] public bool IsOpen;
     // levelların datalarını tut
     public Level[] Levels;
 

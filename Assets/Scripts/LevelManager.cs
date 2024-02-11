@@ -24,6 +24,7 @@ public class LevelManager : MonoBehaviour
     private House _currentHouse;
     private GameObject FoodTaskPanel;
     private List<Food> _taskFoods = new List<Food>();
+    public List<GameObject> TaskFoodGO = new List<GameObject>();
 
     public void InitializeLevel(House house)
     {
@@ -58,7 +59,7 @@ public class LevelManager : MonoBehaviour
         // initialize foods on the table
         for (int j = 0; j < FoodHolder.transform.childCount; j++)
         {
-            Instantiate(_taskFoods[j].Prefab, FoodHolder.transform.GetChild(j));
+            TaskFoodGO.Add(Instantiate(_taskFoods[j].Prefab, FoodHolder.transform.GetChild(j)));
         }
 
         FoodTaskPanelMove();
@@ -90,5 +91,6 @@ public class LevelManager : MonoBehaviour
         FoodTaskPanel = null;
         FoodHolder = null;
         _currentHouse = null;
+        TaskFoodGO.Clear();
     }
 }
