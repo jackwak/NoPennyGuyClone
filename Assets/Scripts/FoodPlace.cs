@@ -40,13 +40,26 @@ public class FoodPlace : MonoBehaviour
 
         // playerýn positionýný new player posa eþitle animle
 
-
-        // eðer varsa playerýn animini oynat (animatora siti ekle)
-        if (PlayerAnimation != null)
+        other.transform.DOMove(NewFoodTransform.position, 0.2f).OnComplete(() =>
         {
-            other.GetComponent<Animator>().Play(PlayerAnimation.name);
-        }
+            // eðer varsa playerýn animini oynat (animatora siti ekle)
+            if (PlayerAnimation != null)
+            {
+                Animator animator = other.GetComponent<Animator>();
+                animator.Play(PlayerAnimation.name);
+                float animationDuration = animator.GetCurrentAnimatorStateInfo(0).length;
 
+                DOVirtual.DelayedCall(animationDuration + 0.2f, () =>
+                {
+                    KeepGoingAfterPlayerAnim();
+                });
+            }
+            KeepGoingAfterPlayerAnim();
+        });
+    }
+
+    void KeepGoingAfterPlayerAnim()
+    {
 
         // foodGO pos unu karakterin elinin posa ekle animle
         FoodGO.transform.position = NewFoodTransform.position;
@@ -62,8 +75,5 @@ public class FoodPlace : MonoBehaviour
 
 
         // security ve waiterý setle
-
     }
-
-
 }
