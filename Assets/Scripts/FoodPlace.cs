@@ -9,13 +9,23 @@ public class FoodPlace : MonoBehaviour
 
     public Transform NewFoodTransform;
     public Transform NewPlayerPosition;
-    [HideInInspector] public Transform OldPlayerPosition;
+    [HideInInspector] public Vector3 OldPlayerPosition;
+    private Material _rangeMaterial;
 
-    public Animation PlayerAnimation;
+    public bool HasPlayerAnimation;
 
     private void Start()
     {
-        FoodGO = transform.GetChild(0)?.gameObject;
+        FoodGO = transform.GetChild(transform.childCount - 1)?.gameObject;
+
+        _rangeMaterial = (Material)Resources.Load("Range", typeof(Material));
+
+        Color color = Color.white;
+        color.a = 0.3f;
+
+        _rangeMaterial.color = color;
+
+        
     }
 
     public void GiveTheFoodToCustomer(Collider other)
@@ -28,6 +38,8 @@ public class FoodPlace : MonoBehaviour
 
             FoodGO.transform.SetParent(gameObject.transform);
             FoodGO.transform.localPosition = Vector3.zero;
+
+            foodTaker.IsFoodOnHand = false;
         }
     }
 
@@ -35,45 +47,63 @@ public class FoodPlace : MonoBehaviour
     {
         if (FoodGO == null) return;
 
-        OldPlayerPosition.position = other.transform.position;
+        OldPlayerPosition = other.transform.position;
+
+
+        CapsuleCollider capsuleCollider = other.gameObject.GetComponent<CapsuleCollider>();
+
+        capsuleCollider.isTrigger = true;
+
 
 
         // playerýn positionýný new player posa eþitle animle
 
-        other.transform.DOMove(NewFoodTransform.position, 0.2f).OnComplete(() =>
+        other.transform.DOMove(NewPlayerPosition.position, 2f);
+
+        // eðer varsa playerýn animini oynat (animatora siti ekle)
+        if (HasPlayerAnimation)
         {
-            // eðer varsa playerýn animini oynat (animatora siti ekle)
-            if (PlayerAnimation != null)
-            {
-                Animator animator = other.GetComponent<Animator>();
-                animator.Play(PlayerAnimation.name);
-                float animationDuration = animator.GetCurrentAnimatorStateInfo(0).length;
+            Animator animator = other.GetComponent<Animator>();
+            animator.SetBool("IsSitting", true);
+        }
 
-                DOVirtual.DelayedCall(animationDuration + 0.2f, () =>
-                {
-                    KeepGoingAfterPlayerAnim();
-                });
-            }
-            KeepGoingAfterPlayerAnim();
-        });
-    }
+        // karakterin yüzünü oturduðu yerden yemeðe doðru çevir (new player pos la FoodGO nin pos u arasýnda bir vector oluþtur ve karakterin yüzünü o vektör yap)
 
-    void KeepGoingAfterPlayerAnim()
-    {
+        //var lookDirection = FoodGO.transform.position - NewFoodTransform.position;
+
+        //transform.rotation = Quaternion.LookRotation(lookDirection);
+
+        //other.transform.DOLookAt(new Vector3(FoodGO.transform.position.x, NewPlayerPosition.position.y, FoodGO.transform.position.z), 2f);
+
 
         // foodGO pos unu karakterin elinin posa ekle animle
-        FoodGO.transform.position = NewFoodTransform.position;
+        FoodGO.transform.DOMove(NewFoodTransform.position, 2f).SetDelay(2f).OnComplete(() =>
+        {
+            // yukarýdaki anim bittikten sonra yemek yeme animi oynat
+            // ÖYLE BÝ ANÝM YOK
+            DOVirtual.DelayedCall(1f, () =>
+            {
 
+                // yemek yeme animi bittikten sonra foodGO destroyla foodGO null la (emin deðilim)
+                Destroy(FoodGO);
+                FoodGO = null;
 
-        // yukarýdaki anim bittikten sonra yemek yeme animi oynat
+                // playerýn pos old player posa eþitle
+                other.transform.DOMove(OldPlayerPosition, 1f);
+                other.GetComponent<Animator>().SetBool("IsSitting", false);
 
+                // security ve waiterý setle
+                Color color = Color.red;
+                color.a = 0.3f;
 
-        // yemek yeme animi bittikten sonra foodGO destroyla foodGO null la (emin deðilim)
+                _rangeMaterial.color = color;
 
+                // capsule colliderý aç
+                capsuleCollider.isTrigger = false;
 
-        // playerýn pos old player posa eþitle
+            });
 
+        });
 
-        // security ve waiterý setle
     }
 }

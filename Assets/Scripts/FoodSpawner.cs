@@ -17,8 +17,8 @@ public class FoodSpawner : MonoBehaviour
     {
         int r = Random.Range(0, LevelManager.Instance.TaskFoodGO.Count);
 
-        Instantiate(LevelManager.Instance.TaskFoodGO[r], transform);
-
+        Instantiate(LevelManager.Instance._taskFoods[r].Prefab, transform);
+        
         isFoodOnTable = true;
     }
 

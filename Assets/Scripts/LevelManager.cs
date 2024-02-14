@@ -23,7 +23,7 @@ public class LevelManager : MonoBehaviour
     private GameObject FoodHolder;
     private House _currentHouse;
     private GameObject FoodTaskPanel;
-    private List<Food> _taskFoods = new List<Food>();
+    public List<Food> _taskFoods = new List<Food>();
     public List<GameObject> TaskFoodGO = new List<GameObject>();
 
     public void InitializeLevel(House house)

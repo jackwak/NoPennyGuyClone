@@ -38,14 +38,6 @@ public abstract class Worker : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            PlayerCatched();
-        }
-    }
-
     public bool AtEndOfPath()
     {
         hasPath |= _agent.hasPath;
@@ -63,6 +55,7 @@ public abstract class Worker : MonoBehaviour
     {
         //set catch state
         _state = State.CATCH;
+        Debug.Log("Catch State!");
     }
 
     private void OnDisable()
