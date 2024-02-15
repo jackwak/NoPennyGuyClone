@@ -64,7 +64,7 @@ public class FoodPlace : MonoBehaviour
         // playerýn positionýný new player posa eþitle animle
         sequence.Append(other.transform.DOMove(NewPlayerPosition.position, .5f));
 
-        // eðer varsa playerýn animini oynat (animatora siti ekle)
+        // eðer varsa playerýn animini oynat
         if (HasPlayerAnimation)
         {
             animator.SetBool("IsSitting", true);
