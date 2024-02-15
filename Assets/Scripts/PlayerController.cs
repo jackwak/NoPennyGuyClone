@@ -45,4 +45,9 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("IsRunning", false);
         }
     }
+
+    public void CharacterRotate(Vector3 rotateVector)
+    {
+        transform.eulerAngles = rotateVector;
+    }
 }

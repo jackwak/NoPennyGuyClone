@@ -11,6 +11,7 @@ public class FoodPlace : MonoBehaviour
     public Transform NewPlayerPosition;
     [HideInInspector] public Vector3 OldPlayerPosition;
     private Material _rangeMaterial;
+    [SerializeField] private Vector3 playerRotation;
 
     public bool HasPlayerAnimation;
 
@@ -51,33 +52,30 @@ public class FoodPlace : MonoBehaviour
 
 
         CapsuleCollider capsuleCollider = other.gameObject.GetComponent<CapsuleCollider>();
+        PlayerController playerController = other.gameObject.GetComponent<PlayerController>();
+        Animator animator = other.GetComponent<Animator>();
 
+        animator.SetBool("IsRunning", false);
+        playerController.enabled = false;
         capsuleCollider.isTrigger = true;
 
-
+        Sequence sequence = DOTween.Sequence();
 
         // playerýn positionýný new player posa eþitle animle
-
-        other.transform.DOMove(NewPlayerPosition.position, 2f);
+        sequence.Append(other.transform.DOMove(NewPlayerPosition.position, .5f));
 
         // eðer varsa playerýn animini oynat (animatora siti ekle)
         if (HasPlayerAnimation)
         {
-            Animator animator = other.GetComponent<Animator>();
             animator.SetBool("IsSitting", true);
         }
 
         // karakterin yüzünü oturduðu yerden yemeðe doðru çevir (new player pos la FoodGO nin pos u arasýnda bir vector oluþtur ve karakterin yüzünü o vektör yap)
-
-        //var lookDirection = FoodGO.transform.position - NewFoodTransform.position;
-
-        //transform.rotation = Quaternion.LookRotation(lookDirection);
-
-        //other.transform.DOLookAt(new Vector3(FoodGO.transform.position.x, NewPlayerPosition.position.y, FoodGO.transform.position.z), 2f);
+        other.transform.DORotate(playerRotation, .5f);        
 
 
         // foodGO pos unu karakterin elinin posa ekle animle
-        FoodGO.transform.DOMove(NewFoodTransform.position, 2f).SetDelay(2f).OnComplete(() =>
+        sequence.AppendCallback(()=>FoodGO.transform.DOMove(NewFoodTransform.position, 2f).OnComplete(() =>
         {
             // yukarýdaki anim bittikten sonra yemek yeme animi oynat
             // ÖYLE BÝ ANÝM YOK
@@ -100,10 +98,11 @@ public class FoodPlace : MonoBehaviour
 
                 // capsule colliderý aç
                 capsuleCollider.isTrigger = false;
+                playerController.enabled = true;
 
             });
 
-        });
+        }));
 
     }
 }
