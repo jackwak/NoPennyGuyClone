@@ -75,7 +75,7 @@ public class FoodPlace : MonoBehaviour
 
 
         // foodGO pos unu karakterin elinin posa ekle animle
-        sequence.AppendCallback(()=>FoodGO.transform.DOMove(NewFoodTransform.position, 2f).OnComplete(() =>
+        sequence.AppendCallback(()=>FoodGO.transform.DOMove(NewFoodTransform.position, 1f).OnComplete(() =>
         {
             // yukarýdaki anim bittikten sonra yemek yeme animi oynat
             // ÖYLE BÝ ANÝM YOK
