@@ -72,7 +72,6 @@ public class LevelManager : MonoBehaviour
         //set to middle of camera the Food task panel
         Vector3 foodTaskPanelPosition = FoodTaskPanel.transform.position;
         Vector3 foodTaskPanelScale = FoodTaskPanel.transform.localScale;
-        Vector3 middleOfCamera = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0));
         FoodTaskPanel.transform.position = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0);
         FoodTaskPanel.transform.DOScale(2f, 1f).From(Vector3.zero).SetUpdate(true);
 

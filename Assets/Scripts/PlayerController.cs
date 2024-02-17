@@ -23,14 +23,13 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        hor = Input.GetAxis("Horizontal");
-        vert = Input.GetAxis("Vertical");
+        hor = Input.GetAxis("Horizontal") * Time.deltaTime;
+        vert = Input.GetAxis("Vertical") * Time.deltaTime;
 
         _moveDirection = new Vector3(hor, 0, vert);
         _moveDirection.Normalize();
 
         rb.MovePosition(transform.position + _moveDirection * _speed * Time.deltaTime);
-        //transform.Translate(_moveDirection * _speed * Time.deltaTime, Space.World);
 
         if (_moveDirection != Vector3.zero)
         {

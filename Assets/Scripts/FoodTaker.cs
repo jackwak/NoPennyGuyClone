@@ -33,7 +33,7 @@ public class FoodTaker : MonoBehaviour
                 foodSpawner.isFoodOnTable = false;
                 IsFoodOnHand = true;
 
-                StartCoroutine(foodSpawner.DelaySpawnFood(10f));
+                StartCoroutine(foodSpawner.DelaySpawnFood(25f));
             }
         }
     }

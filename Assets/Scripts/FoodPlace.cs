@@ -38,7 +38,7 @@ public class FoodPlace : MonoBehaviour
             FoodGO = foodTaker.WaiterFoodPosition.GetChild(0).gameObject;
 
             FoodGO.transform.SetParent(gameObject.transform);
-            FoodGO.transform.localPosition = Vector3.zero;
+            FoodGO.transform.DOLocalMove(Vector3.zero, 0.5f);
 
             foodTaker.IsFoodOnHand = false;
         }
@@ -71,15 +71,20 @@ public class FoodPlace : MonoBehaviour
         }
 
         // karakterin yüzünü oturduðu yerden yemeðe doðru çevir (new player pos la FoodGO nin pos u arasýnda bir vector oluþtur ve karakterin yüzünü o vektör yap)
-        other.transform.DORotate(playerRotation, .5f);        
+        other.transform.DORotate(playerRotation, .5f).OnComplete(() =>
+        {
+            //customer cry animation set
+            //transform.Find("Customer").GetComponent<Animator>().SetTrigger("Cry");
+        });        
 
 
         // foodGO pos unu karakterin elinin posa ekle animle
         sequence.AppendCallback(()=>FoodGO.transform.DOMove(NewFoodTransform.position, 1f).OnComplete(() =>
         {
             // yukarýdaki anim bittikten sonra yemek yeme animi oynat
-            // ÖYLE BÝ ANÝM YOK
-            DOVirtual.DelayedCall(1f, () =>
+            FoodGO.transform.GetChild(0).GetComponent<ParticleSystem>().Play();
+
+            DOVirtual.DelayedCall(2f, () =>
             {
 
                 // yemek yeme animi bittikten sonra foodGO destroyla foodGO null la (emin deðilim)
