@@ -6,6 +6,7 @@ using DG.Tweening;
 using static Cinemachine.DocumentationSortingAttribute;
 using System.Net;
 using System;
+using TMPro;
 
 public class LevelManager : MonoBehaviour
 {
@@ -67,8 +68,6 @@ public class LevelManager : MonoBehaviour
         }
 
         FoodTaskPanelMove();
-
-
     }
 
     public void TickTheFoodOnUI(string name)
@@ -93,9 +92,6 @@ public class LevelManager : MonoBehaviour
 
             if (imageName == name)
             {
-                
-
-
                 Vector3 foodTaskPanelPosition = FoodTaskPanel.transform.position;
                 Vector3 foodTaskPanelScale = FoodTaskPanel.transform.localScale;
                 FoodTaskPanel.transform.DOMove(new Vector3(Screen.width * .5f, Screen.height * .75f, 0), 1f);
@@ -106,19 +102,24 @@ public class LevelManager : MonoBehaviour
                     {
                         //Back to first position
                         FoodTaskPanel.transform.DOMove(foodTaskPanelPosition, 1f).SetDelay(1f);
-                        FoodTaskPanel.transform.DOScale(foodTaskPanelScale, 1f).SetDelay(1f);
-
-                        if (IsTasksCompleted())
+                        FoodTaskPanel.transform.DOScale(foodTaskPanelScale, 1f).SetDelay(1f).OnComplete(() =>
                         {
-                            // back to door ui
-                            DoorArrowImage.gameObject.SetActive(true);
+                            if (IsTasksCompleted())
+                            {
+                                // back to door ui
+                                DoorArrowImage.gameObject.SetActive(true);
 
-                            DoorArrowImage.rectTransform.DOLocalMoveX(DoorArrowImage.rectTransform.localPosition.x + .1f, 1f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
-                        }
+                                DoorArrowImage.rectTransform.DOLocalMoveX(DoorArrowImage.rectTransform.localPosition.x + .1f, 1f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
+
+                                TextMeshProUGUI x = FoodTaskPanel.transform.Find("Exit Text").GetComponent<TextMeshProUGUI>();
+
+                                x.gameObject.SetActive(true); // level bittiðnide kapat
+
+                                x.DOFade(0, 1f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
+                            }
+                        });
                     });
                 });
-
-                
             }
         }
     }
@@ -165,6 +166,36 @@ public class LevelManager : MonoBehaviour
 
     public void ClearVariables()
     {
+        // set last level index
+        int level = _currentHouse.LastOpenedLevelIndex;
+
+        // set task food count
+        int taskFoodCount = _currentHouse.Levels[level].TaskFoods.Length;
+
+        //Clear food task
+        for (int i = 0; i < taskFoodCount; i++)
+        {
+            Image foodImage = FoodTaskPanel.transform.Find("Images").transform.GetChild(i).GetComponent<Image>();
+            foodImage.gameObject.SetActive(false);
+        }
+        FoodTaskPanel.transform.Find("Exit Text").gameObject.SetActive(false);
+
+
+        // clear foods on the table
+        for (int j = 0; j < FoodHolder.transform.childCount; j++)
+        {
+            string clone = "(Clone)";
+
+            foreach (Transform item in FoodHolder.transform.GetChild(j))
+            {
+                if (item.name.Contains(clone))
+                {
+                    Destroy(item);
+                }
+            }
+        }
+
+
         _taskFoods.Clear();
         FoodTaskPanel = null;
         FoodHolder = null;
