@@ -48,6 +48,8 @@ public class FoodPlace : MonoBehaviour
     {
         if (FoodGO == null) return;
 
+        LevelManager.Instance.TickTheFoodOnUI(FoodGO.name);
+
         OldPlayerPosition = other.transform.position;
 
 
