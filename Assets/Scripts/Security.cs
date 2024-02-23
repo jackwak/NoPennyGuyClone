@@ -52,7 +52,7 @@ public class Security : Worker
         float a = Random.Range(3,5);
 
         yield return new WaitForSeconds(a);
-
+        if(isActiveAndEnabled)
         MoveToNextPatrolPoint();
     }
 }

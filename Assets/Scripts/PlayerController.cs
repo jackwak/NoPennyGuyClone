@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class PlayerController : MonoBehaviour
 {
@@ -48,5 +49,29 @@ public class PlayerController : MonoBehaviour
     public void CharacterRotate(Vector3 rotateVector)
     {
         transform.eulerAngles = rotateVector;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Door"))
+        {
+            if (LevelManager.Instance.IsTasksCompleted())
+            {
+                StopAllCoroutines();
+
+                Time.timeScale = 0f;
+
+                // open panel. you escaped. next level or go to street button
+                SaveManager.Instance.LastOpenedHouseIndex++;
+
+
+                LevelManager.Instance.OpenEscapePanel();
+
+                SaveManager.Instance.SaveMoney();
+                LevelManager.Instance.ClearVariables();
+            }
+
+
+        }
     }
 }

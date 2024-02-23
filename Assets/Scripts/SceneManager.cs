@@ -9,6 +9,7 @@ public class SceneManager : MonoBehaviour
     [SerializeField] private GameObject[] _scenes; // start scene is 0 index
     private GameObject _currentScene;
     Cinemachine.CinemachineBrain _cinemachineBrain;
+    [SerializeField] private Cinemachine.CinemachineVirtualCamera _startCamera;
 
 
     private void Awake()
@@ -27,6 +28,9 @@ public class SceneManager : MonoBehaviour
     {
         _currentScene = _scenes[0];
         _cinemachineBrain = GameObject.Find("Main Camera").GetComponent<Cinemachine.CinemachineBrain>();
+
+
+        
     }
 
 
@@ -67,10 +71,22 @@ public class SceneManager : MonoBehaviour
     public void LoadStartScene()
     {
         //
+        _currentScene.transform.GetChild(1).GetComponent<Cinemachine.CinemachineVirtualCamera>().Priority--;
+
+        
+
+        _startCamera.GetComponent<Cinemachine.CinemachineVirtualCamera>().Priority++;
+
+        // set to 1 the cinemachine brain's switch camera time
+        _cinemachineBrain.enabled = false;
+        _cinemachineBrain.m_DefaultBlend.m_Time = 2;
+        _cinemachineBrain.enabled = true;
+
+        House currentHouse = _currentScene.GetComponent<House>();
+
 
         //disappear current scene
-        _currentScene.SetActive(false);
-
+        currentHouse.GetHouseScene.SetActive(false);
 
 
 
@@ -83,5 +99,6 @@ public class SceneManager : MonoBehaviour
         _currentScene = _scenes[0];
     }
 
+    
 
 }

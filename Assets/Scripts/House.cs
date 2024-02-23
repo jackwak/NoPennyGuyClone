@@ -4,13 +4,12 @@ using UnityEngine;
 using Cinemachine;
 public class House : MonoBehaviour
 {
-    [SerializeField] private GameObject _houseScene;
-    [SerializeField] private int _houseIndex;
+    [SerializeField] public GameObject _houseScene;
+    public int _houseIndex;
     private CinemachineVirtualCamera camera;
-    [SerializeField] private int _levelCount = 5;
+    public int LevelCount = 5;
     public int LastOpenedLevelIndex = 0; // bunu playerprefle tutman gerekebilir
     [HideInInspector] public bool IsOpen;
-    // levelların datalarını tut
     public Level[] Levels;
 
     public GameObject GetHouseScene { get { return _houseScene; } }

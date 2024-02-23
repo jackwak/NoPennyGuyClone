@@ -33,6 +33,11 @@ public class SelectionController : MonoBehaviour
         }
     }
 
+    public void SetCurrentHouse(int houseIndex)
+    {
+        _currentHouse = Houses[houseIndex - 1];
+    }
+
     private void Start()
     {
         _previousButton.gameObject.SetActive(false);
@@ -169,5 +174,10 @@ public class SelectionController : MonoBehaviour
         t.DOScale(t.localScale + new Vector3(.2f, .2f, .2f), .5f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
     }
 
+    public void SetSelectionControllerToStart()
+    {
+        _currentCameraIndex = 0;
 
+        _previousButton.gameObject.SetActive(false);
+    }
 }

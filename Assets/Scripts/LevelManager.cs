@@ -7,6 +7,7 @@ using static Cinemachine.DocumentationSortingAttribute;
 using System.Net;
 using System;
 using TMPro;
+using Unity.VisualScripting;
 
 public class LevelManager : MonoBehaviour
 {
@@ -30,9 +31,18 @@ public class LevelManager : MonoBehaviour
     public List<Food> _taskFoods = new List<Food>();
     public List<GameObject> TaskFoodGO = new List<GameObject>();
     public Image DoorArrowImage;
+    public Transform[] MoneyTransforms;
+    public Transform MoneyImage;
+    public GameObject[] MiniMoneysGO;
+    public GameObject EscapePanel;
+
+    public Button StreetButton, NextButton;
+
+    public TextMeshProUGUI MoneyText;
 
     public void InitializeLevel(House house)
     {
+
         // set loaded house
         _currentHouse = house;
 
@@ -40,6 +50,23 @@ public class LevelManager : MonoBehaviour
         FoodHolder = _currentHouse.GetHouseScene.transform.Find("Food Holder").gameObject;
 
         FoodTaskPanel = _currentHouse.GetHouseScene.transform.Find("Canvas").transform.Find("Food Task Panel").gameObject;
+
+        // set money text
+        MoneyText = _currentHouse.GetHouseScene.transform.Find("Canvas").transform.Find("Money Panel").transform.Find("Money Image").transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
+
+        //set escape panel
+        EscapePanel = _currentHouse.GetHouseScene.transform.Find("Canvas").transform.Find("Escape Panel").gameObject;
+
+        //set buttons
+        StreetButton = EscapePanel.transform.Find("Street Button").GetComponent<Button>();
+        NextButton = EscapePanel.transform.Find("Next Button").GetComponent<Button>();
+
+        // set button onclick
+        StreetButton.onClick.AddListener(OnClickedStreetButton);
+        NextButton.onClick.AddListener(OnClickedNextButton);
+
+        // set money count
+        MoneyText.text = SaveManager.Instance.GetTotalMoney().ToString();
 
         // appear house scene
         _currentHouse.GetHouseScene.gameObject.SetActive(true);
@@ -124,7 +151,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    private bool IsTasksCompleted()
+    public bool IsTasksCompleted()
     {
         int completedTaskCount = 0;
 
@@ -190,7 +217,7 @@ public class LevelManager : MonoBehaviour
             {
                 if (item.name.Contains(clone))
                 {
-                    Destroy(item);
+                    Destroy(item.gameObject);
                 }
             }
         }
@@ -202,4 +229,87 @@ public class LevelManager : MonoBehaviour
         _currentHouse = null;
         TaskFoodGO.Clear();
     }
+
+
+    public void MoneyAnimation(int miniMoneyCount)
+    {
+        for (int i = 0; i < miniMoneyCount; i++)
+        {
+            int index = i;
+
+            MiniMoneysGO[index].SetActive(true);
+
+            MiniMoneysGO[index].transform.position = MoneyTransforms[i].position;
+
+            float random = UnityEngine.Random.Range(1f, 1.5f);
+            float random2 = UnityEngine.Random.Range(1f, 1.5f);
+
+
+            MiniMoneysGO[index].transform.DOScale(1, random).From(0f).SetEase(Ease.OutCirc);
+            MiniMoneysGO[index].transform.DOMove(MoneyImage.transform.position, random2).SetEase(Ease.InBack).OnComplete(() =>
+            {
+                SaveManager.Instance.IncreaseEarnedMoney(10);
+            });
+
+
+
+        }
+    }
+
+    public void OpenEscapePanel()
+    {
+        EscapePanel.SetActive(true);
+
+        EscapePanel.transform.DOScale(1, 1f).From(0).SetEase(Ease.OutBack).SetUpdate(true);
+    }
+
+    public void OnClickedNextButton()
+    {
+        Time.timeScale = 1f;
+
+        int nextLevel = SaveManager.Instance.LastOpenedHouseIndex;
+
+        EscapePanel?.SetActive(false);
+
+
+        if (SelectionController.Instance.GetCurrentHouse.LevelCount < nextLevel)
+        {
+            // reset levels
+            SaveManager.Instance.LastOpenedHouseIndex = 0;
+
+            // get currrent house index
+            int a = SelectionController.Instance.GetCurrentHouse._houseIndex;
+
+            // set next house to current house
+            SelectionController.Instance.SetCurrentHouse(a + 1);
+
+            House house = SelectionController.Instance.GetCurrentHouse;
+
+            InitializeLevel(house);
+        }
+        else
+        {
+            House house = SelectionController.Instance.GetCurrentHouse;
+
+
+            InitializeLevel(house);
+        }
+
+        SceneManager.Instance.LoadLevel();
+        
+    }
+
+    public void OnClickedStreetButton()
+    {
+        Time.timeScale = 1f;
+
+        EscapePanel?.SetActive(false);
+
+        SelectionController.Instance.SetSelectionControllerToStart();
+
+        SceneManager.Instance.LoadStartScene();
+
+        //YENÝDEN AYNI LEVELA BAÞLADIÐINDA KARAKTERLERÝN OLDUÐU YERLERÝ AYNI AYARLA
+    }
+    
 }

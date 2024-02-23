@@ -33,6 +33,7 @@ public class TutorialManager : MonoBehaviour
         for (int i = 0; i < _tutorials.Length; i++)
         {
             string tutName = "Tutorial" + i;
+
             if (!PlayerPrefs.HasKey(tutName))
             {
                 PlayerPrefs.SetInt(tutName, 0);

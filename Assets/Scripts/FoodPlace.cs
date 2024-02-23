@@ -88,6 +88,7 @@ public class FoodPlace : MonoBehaviour
 
             DOVirtual.DelayedCall(2f, () =>
             {
+                CollectMoney();
 
                 // yemek yeme animi bittikten sonra foodGO destroyla foodGO null la (emin deðilim)
                 Destroy(FoodGO);
@@ -107,9 +108,27 @@ public class FoodPlace : MonoBehaviour
                 capsuleCollider.isTrigger = false;
                 playerController.enabled = true;
 
+
             });
 
         }));
+
+
+
+    }
+
+
+    public void CollectMoney()
+    {
+        string foodName = FoodGO.name;
+        foodName = foodName.Replace("(Clone)", "");
+
+        Food food;
+        food = Resources.Load<Food>(foodName);
+
+        int miniMoneyCount = food.Price / 10;
+
+        LevelManager.Instance.MoneyAnimation(miniMoneyCount);
 
     }
 }
