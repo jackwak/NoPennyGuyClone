@@ -9,7 +9,8 @@ using System;
 public class SelectionController : MonoBehaviour
 {
     public static SelectionController Instance;
-
+    [SerializeField] private int _houseCount;     
+    
     [SerializeField] int _currentCameraIndex = 0;  // 0 is player cam
 
     [SerializeField] public List<House> Houses;
@@ -33,13 +34,34 @@ public class SelectionController : MonoBehaviour
         }
     }
 
-    public void SetCurrentHouse(int houseIndex)
+    public void InitializeSelectionData()
     {
-        _currentHouse = Houses[houseIndex - 1];
-    }
+        Debug.Log("a");
+        GameObject startScene = GameObject.Find("Start Scene(Clone)");
 
-    private void Start()
-    {
+        for (int i = 0; i < _houseCount; i++)
+        {
+            Houses.Add(startScene.transform.Find("House" + (i + 1)).GetComponent<House>());
+        }
+
+        _playerCamera = startScene.transform.Find("CM vcam1").GetComponent<CinemachineVirtualCamera>();
+
+        Transform canvas = startScene.transform.Find("Canvas");
+
+        _nextButton = canvas.transform.Find("Next Button").GetComponent<Button>();
+        _playButton = canvas.transform.Find("Play Button").GetComponent<Button>();
+        _playButton2 = canvas.transform.Find("Play Button2").GetComponent<Button>();
+        _upgradeButton = canvas.transform.Find("Upgrade Button").GetComponent<Button>();
+        _previousButton = canvas.transform.Find("Previous Button").GetComponent<Button>();
+
+        //on clicks
+        _nextButton.onClick.AddListener(NextCamera);
+        _playButton2.onClick.AddListener(SceneManager.Instance.LoadLevel);
+        _previousButton.onClick.AddListener(PreviousCamera);
+
+        _arrowRectTransform = startScene.transform.Find("World Space Canvas").transform.GetChild(0).GetComponent<RectTransform>();
+
+
         _previousButton.gameObject.SetActive(false);
 
         _arrowRectTransform.DOAnchorPosY(4.7f, 1f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
@@ -49,6 +71,11 @@ public class SelectionController : MonoBehaviour
         UIIdleAnimation(_playButton.transform);
         UIIdleAnimation(_upgradeButton.transform);
         UIIdleAnimation(_playButton2.transform);
+    }
+
+    public void SetCurrentHouse(int houseIndex)
+    {
+        _currentHouse = Houses[houseIndex - 1];
     }
 
 

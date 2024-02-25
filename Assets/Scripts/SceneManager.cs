@@ -7,9 +7,11 @@ public class SceneManager : MonoBehaviour
     public static SceneManager Instance;
 
     [SerializeField] private GameObject[] _scenes; // start scene is 0 index
-    private GameObject _currentScene;
+    [SerializeField] private GameObject _currentScene;
     Cinemachine.CinemachineBrain _cinemachineBrain;
     [SerializeField] private Cinemachine.CinemachineVirtualCamera _startCamera;
+
+    public GameObject GetCurrentScene { get => _currentScene; }
 
 
     private void Awake()
@@ -22,17 +24,20 @@ public class SceneManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
 
-    private void Start()
-    {
-        _currentScene = _scenes[0];
+
+        //initialize game
+        _currentScene = Instantiate(_scenes[0]);
         _cinemachineBrain = GameObject.Find("Main Camera").GetComponent<Cinemachine.CinemachineBrain>();
-
-
-        
+        StartCoroutine(DelaySelectionData());
     }
+    IEnumerator DelaySelectionData()
+    {
+        yield return new WaitForSeconds(.1f);
 
+        SelectionController.Instance.InitializeSelectionData();
+
+    }
 
     public void LoadLevel()
     {
@@ -52,20 +57,14 @@ public class SceneManager : MonoBehaviour
         _cinemachineBrain.enabled = true;
 
         // disappear start scene
-        _currentScene.SetActive(false);
-
-        // levelın datalarını house a yükle
-        LevelManager.Instance.InitializeLevel(house);
-
-
-
-
+        //Destroy(_currentScene);
+        _currentScene.gameObject.SetActive(false);
 
         // appear loaded scene
-        house.GetHouseScene.SetActive(true);
+        _currentScene = Instantiate(house.GetHouseScene);
 
-        // save loaded scene to current scene
-        _currentScene = house.gameObject;
+        // levelın datalarını house a yükle
+        LevelManager.Instance.InitializeLevel(house, _currentScene);
     }
 
     public void LoadStartScene()
@@ -86,14 +85,10 @@ public class SceneManager : MonoBehaviour
 
 
         //disappear current scene
-        currentHouse.GetHouseScene.SetActive(false);
-
-
-
-
+        Destroy(currentHouse.GetHouseScene);
 
         // appear start scene
-        _scenes[0].SetActive(true);
+        Instantiate(_scenes[0]);
 
         // save loaded scene to current scene
         _currentScene = _scenes[0];

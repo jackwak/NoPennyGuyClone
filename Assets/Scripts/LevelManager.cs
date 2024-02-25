@@ -25,37 +25,58 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    private GameObject FoodHolder;
-    private House _currentHouse;
-    private GameObject FoodTaskPanel;
+    public GameObject FoodHolder;
+    [SerializeField] private House _currentHouse;
+    [SerializeField]private GameObject FoodTaskPanel;
     public List<Food> _taskFoods = new List<Food>();
     public List<GameObject> TaskFoodGO = new List<GameObject>();
     public Image DoorArrowImage;
-    public Transform[] MoneyTransforms;
+    public List<Transform> MoneyTransforms;
     public Transform MoneyImage;
-    public GameObject[] MiniMoneysGO;
+    public List<GameObject> MiniMoneysGO;
+    public GameObject MoneyPanel;
     public GameObject EscapePanel;
 
     public Button StreetButton, NextButton;
 
     public TextMeshProUGUI MoneyText;
 
-    public void InitializeLevel(House house)
+    public void InitializeLevel(House house, GameObject currentScene)
     {
+        // current house missing hatasý çünkü house start scenede ve biz onu destroyluyoruz
 
         // set loaded house
         _currentHouse = house;
 
         // set food Holder
-        FoodHolder = _currentHouse.GetHouseScene.transform.Find("Food Holder").gameObject;
+        FoodHolder = currentScene.transform.Find("Food Holder").gameObject;
 
-        FoodTaskPanel = _currentHouse.GetHouseScene.transform.Find("Canvas").transform.Find("Food Task Panel").gameObject;
+        FoodTaskPanel = currentScene.transform.Find("Canvas").transform.Find("Food Task Panel").gameObject;
+
+        //set money panel
+        MoneyPanel = currentScene.transform.Find("Canvas").transform.Find("Money Panel").gameObject;
+        MoneyImage = MoneyPanel.transform.Find("Money Image");
+
+        Transform miniMoneyHolder = MoneyPanel.transform.Find("Mini Money Holder");
+        foreach (var item in miniMoneyHolder)
+        {
+            MiniMoneysGO.Add(miniMoneyHolder.gameObject);
+        }
+
+        Transform moneyPositions = MoneyPanel.transform.Find("Money Positions");
+        foreach (var item in moneyPositions)
+        {
+            MoneyTransforms.Add(moneyPositions);
+        }
+
+        // set door arrow image
+        DoorArrowImage = GameObject.Find("World Space Canvas").transform.Find("Door Arrow").GetComponent<Image>();
 
         // set money text
-        MoneyText = _currentHouse.GetHouseScene.transform.Find("Canvas").transform.Find("Money Panel").transform.Find("Money Image").transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
+        MoneyText = currentScene.transform.Find("Canvas").transform.Find("Money Panel").transform.Find("Money Image").transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
 
         //set escape panel
-        EscapePanel = _currentHouse.GetHouseScene.transform.Find("Canvas").transform.Find("Escape Panel").gameObject;
+        EscapePanel = currentScene.transform.Find("Canvas").transform.Find("Escape Panel").gameObject;
 
         //set buttons
         StreetButton = EscapePanel.transform.Find("Street Button").GetComponent<Button>();
@@ -68,8 +89,6 @@ public class LevelManager : MonoBehaviour
         // set money count
         MoneyText.text = SaveManager.Instance.GetTotalMoney().ToString();
 
-        // appear house scene
-        _currentHouse.GetHouseScene.gameObject.SetActive(true);
 
         // set last level index
         int level = _currentHouse.LastOpenedLevelIndex;
@@ -91,7 +110,9 @@ public class LevelManager : MonoBehaviour
         // initialize foods on the table
         for (int j = 0; j < FoodHolder.transform.childCount; j++)
         {
-            TaskFoodGO.Add(Instantiate(_taskFoods[j].Prefab, FoodHolder.transform.GetChild(j)));
+            GameObject a = Instantiate(_taskFoods[j].Prefab, FoodHolder.transform.GetChild(j));
+
+            TaskFoodGO.Add(a);
         }
 
         FoodTaskPanelMove();
@@ -285,14 +306,14 @@ public class LevelManager : MonoBehaviour
 
             House house = SelectionController.Instance.GetCurrentHouse;
 
-            InitializeLevel(house);
+            SceneManager.Instance.LoadLevel();
         }
         else
         {
             House house = SelectionController.Instance.GetCurrentHouse;
 
 
-            InitializeLevel(house);
+            SceneManager.Instance.LoadLevel();
         }
 
         SceneManager.Instance.LoadLevel();

@@ -5,11 +5,11 @@ using DG.Tweening;
 
 public class FoodPlace : MonoBehaviour
 {
-    [HideInInspector]public GameObject FoodGO;
+    public GameObject FoodGO;
 
     public Transform NewFoodTransform;
     public Transform NewPlayerPosition;
-    [HideInInspector] public Vector3 OldPlayerPosition;
+     public Vector3 OldPlayerPosition;
     private Material _rangeMaterial;
     [SerializeField] private Vector3 playerRotation;
 
