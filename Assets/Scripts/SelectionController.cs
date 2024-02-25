@@ -39,10 +39,15 @@ public class SelectionController : MonoBehaviour
         Debug.Log("a");
         GameObject startScene = GameObject.Find("Start Scene(Clone)");
 
+        SceneManager.Instance.StartScene = startScene;
+
         for (int i = 0; i < _houseCount; i++)
         {
             Houses.Add(startScene.transform.Find("House" + (i + 1)).GetComponent<House>());
         }
+
+        //initialize house data
+
 
         _playerCamera = startScene.transform.Find("CM vcam1").GetComponent<CinemachineVirtualCamera>();
 
@@ -206,5 +211,6 @@ public class SelectionController : MonoBehaviour
         _currentCameraIndex = 0;
 
         _previousButton.gameObject.SetActive(false);
+        _nextButton.gameObject.SetActive(true);
     }
 }

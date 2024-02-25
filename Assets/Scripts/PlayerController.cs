@@ -61,14 +61,13 @@ public class PlayerController : MonoBehaviour
 
                 Time.timeScale = 0f;
 
-                // open panel. you escaped. next level or go to street button
-                SaveManager.Instance.LastOpenedHouseIndex++;
-
-
                 LevelManager.Instance.OpenEscapePanel();
 
                 SaveManager.Instance.SaveMoney();
                 LevelManager.Instance.ClearVariables();
+
+                LevelManager.Instance.IncreaseLastOpenedLevelIndex();
+
             }
 
 

@@ -7,6 +7,7 @@ public class SceneManager : MonoBehaviour
     public static SceneManager Instance;
 
     [SerializeField] private GameObject[] _scenes; // start scene is 0 index
+    public GameObject StartScene;
     [SerializeField] private GameObject _currentScene;
     Cinemachine.CinemachineBrain _cinemachineBrain;
     [SerializeField] private Cinemachine.CinemachineVirtualCamera _startCamera;
@@ -69,29 +70,25 @@ public class SceneManager : MonoBehaviour
 
     public void LoadStartScene()
     {
-        //
-        _currentScene.transform.GetChild(1).GetComponent<Cinemachine.CinemachineVirtualCamera>().Priority--;
+        /*House currentHouse = _currentScene.GetComponent<House>();
 
-        
+        //disappear current scene
+        Destroy(currentHouse.GetHouseScene);*/
+        Destroy(_currentScene);
 
-        _startCamera.GetComponent<Cinemachine.CinemachineVirtualCamera>().Priority++;
 
-        // set to 1 the cinemachine brain's switch camera time
+        _currentScene = StartScene;
+
+        _currentScene.SetActive(true);
+
+        _startCamera = _currentScene.transform.Find("CM vcam1").GetComponent<Cinemachine.CinemachineVirtualCamera>(); // bunu start scene olşt sonra setle
+
+        _startCamera.Priority++;
+
+        // set to 2 the cinemachine brain's switch camera time
         _cinemachineBrain.enabled = false;
         _cinemachineBrain.m_DefaultBlend.m_Time = 2;
         _cinemachineBrain.enabled = true;
-
-        House currentHouse = _currentScene.GetComponent<House>();
-
-
-        //disappear current scene
-        Destroy(currentHouse.GetHouseScene);
-
-        // appear start scene
-        Instantiate(_scenes[0]);
-
-        // save loaded scene to current scene
-        _currentScene = _scenes[0];
     }
 
     

@@ -43,7 +43,7 @@ public class LevelManager : MonoBehaviour
 
     public void InitializeLevel(House house, GameObject currentScene)
     {
-        // current house missing hatasý çünkü house start scenede ve biz onu destroyluyoruz
+        // current house missing hatasï¿½ ï¿½ï¿½nkï¿½ house start scenede ve biz onu destroyluyoruz
 
         // set loaded house
         _currentHouse = house;
@@ -58,15 +58,15 @@ public class LevelManager : MonoBehaviour
         MoneyImage = MoneyPanel.transform.Find("Money Image");
 
         Transform miniMoneyHolder = MoneyPanel.transform.Find("Mini Money Holder");
-        foreach (var item in miniMoneyHolder)
+        foreach (Transform item in miniMoneyHolder)
         {
-            MiniMoneysGO.Add(miniMoneyHolder.gameObject);
+            MiniMoneysGO.Add(item.gameObject);
         }
 
         Transform moneyPositions = MoneyPanel.transform.Find("Money Positions");
-        foreach (var item in moneyPositions)
+        foreach (Transform item in moneyPositions)
         {
-            MoneyTransforms.Add(moneyPositions);
+            MoneyTransforms.Add(item);
         }
 
         // set door arrow image
@@ -115,6 +115,8 @@ public class LevelManager : MonoBehaviour
             TaskFoodGO.Add(a);
         }
 
+
+
         FoodTaskPanelMove();
     }
 
@@ -135,8 +137,8 @@ public class LevelManager : MonoBehaviour
 
             GameObject tickGO = imageGO.transform.GetChild(0).gameObject;
 
+            if (tickGO.activeSelf == true) continue;
 
-            if (tickGO.activeSelf == true) return;
 
             if (imageName == name)
             {
@@ -161,7 +163,7 @@ public class LevelManager : MonoBehaviour
 
                                 TextMeshProUGUI x = FoodTaskPanel.transform.Find("Exit Text").GetComponent<TextMeshProUGUI>();
 
-                                x.gameObject.SetActive(true); // level bittiðnide kapat
+                                x.gameObject.SetActive(true); // level bittiï¿½nide kapat
 
                                 x.DOFade(0, 1f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
                             }
@@ -247,8 +249,16 @@ public class LevelManager : MonoBehaviour
         _taskFoods.Clear();
         FoodTaskPanel = null;
         FoodHolder = null;
-        _currentHouse = null;
+        //_currentHouse = null;
         TaskFoodGO.Clear();
+        DoorArrowImage = null;
+        MiniMoneysGO.Clear();
+        MoneyText = null;
+        NextButton = null;
+        StreetButton = null;
+        EscapePanel = null;
+        MoneyPanel = null;
+        MoneyTransforms.Clear();
     }
 
 
@@ -326,11 +336,17 @@ public class LevelManager : MonoBehaviour
 
         EscapePanel?.SetActive(false);
 
+        _currentHouse.gameObject.transform.Find("CM vcam1").GetComponent<Cinemachine.CinemachineVirtualCamera>().Priority--;
+
         SelectionController.Instance.SetSelectionControllerToStart();
 
         SceneManager.Instance.LoadStartScene();
 
-        //YENÝDEN AYNI LEVELA BAÞLADIÐINDA KARAKTERLERÝN OLDUÐU YERLERÝ AYNI AYARLA
+        //YENï¿½DEN AYNI LEVELA BAï¿½LADIï¿½INDA KARAKTERLERï¿½N OLDUï¿½U YERLERï¿½ AYNI AYARLA
     }
-    
+
+    public void IncreaseLastOpenedLevelIndex()
+    {
+        _currentHouse.LastOpenedLevelIndex++;
+    }
 }

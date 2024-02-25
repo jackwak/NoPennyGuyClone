@@ -6,7 +6,8 @@ public class FoodSpawner : MonoBehaviour
 {
     [HideInInspector]
     public bool isFoodOnTable;
-
+    private int _taskFoodCount;
+    private int _counter;
 
     private void Start()
     {
@@ -15,11 +16,14 @@ public class FoodSpawner : MonoBehaviour
 
     public void SpawnFood()
     {
-        int r = Random.Range(0, LevelManager.Instance.TaskFoodGO.Count);
+        //ikinci gameobjeyi spawnlamıyo
+        _taskFoodCount = LevelManager.Instance._taskFoods.Count;
+        _counter = _counter % _taskFoodCount;
 
-        Instantiate(LevelManager.Instance._taskFoods[r].Prefab, transform);
+        Instantiate(LevelManager.Instance._taskFoods[_counter].Prefab, transform);
         
         isFoodOnTable = true;
+        _counter++;
     }
 
     public IEnumerator DelaySpawnFood(float time)
