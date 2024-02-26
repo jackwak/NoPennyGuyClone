@@ -164,6 +164,7 @@ public class SelectionController : MonoBehaviour
 
     public void SetButtonsActiveOnHouse()
     {
+        if (_currentHouse.LastOpenedLevelIndex >= _currentHouse.LevelCount) return;
         _playButton2.gameObject.SetActive(true);
     }
 

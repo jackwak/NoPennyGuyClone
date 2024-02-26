@@ -113,6 +113,10 @@ PrefabInstance:
       value: House1
       objectReference: {fileID: 0}
     - target: {fileID: 4181795729980329376, guid: 4ac02e3bb55dd4287bc3640a5883c784, type: 3}
+      propertyPath: LevelCount
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4181795729980329376, guid: 4ac02e3bb55dd4287bc3640a5883c784, type: 3}
       propertyPath: _houseIndex
       value: 1
       objectReference: {fileID: 0}
