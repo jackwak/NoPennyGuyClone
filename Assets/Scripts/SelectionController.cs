@@ -36,7 +36,6 @@ public class SelectionController : MonoBehaviour
 
     public void InitializeSelectionData()
     {
-        Debug.Log("a");
         GameObject startScene = GameObject.Find("Start Scene(Clone)");
 
         SceneManager.Instance.StartScene = startScene;
