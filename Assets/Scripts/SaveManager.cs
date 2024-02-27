@@ -35,12 +35,15 @@ public class SaveManager : MonoBehaviour
     {
         EarnedMoney += money;
 
-        LevelManager.Instance.MoneyText.text = EarnedMoney.ToString();
+        int currentMoney = PlayerPrefs.GetInt("MoneyCount");
+
+        LevelManager.Instance.MoneyText.text = (currentMoney + EarnedMoney).ToString();
     }
 
     public void SaveMoney()
     {
-        PlayerPrefs.SetInt("MoneyCount", EarnedMoney);
+        int currentMoney = PlayerPrefs.GetInt("MoneyCount");
+        PlayerPrefs.SetInt("MoneyCount", currentMoney + EarnedMoney);
 
         EarnedMoney = 0;
     }

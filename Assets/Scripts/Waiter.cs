@@ -11,6 +11,7 @@ public class Waiter : Worker
     {
         _animator = GetComponent<Animator>();
         _agent = GetComponent<NavMeshAgent>();
+        _rangeGO = transform.Find("Range").gameObject;
 
         MoveToNextPatrolPoint();
     }
@@ -38,6 +39,8 @@ public class Waiter : Worker
                 break;
             case State.CATCH:
 
+
+
                 break;
         }
     }
@@ -51,10 +54,6 @@ public class Waiter : Worker
 
     }
 
-    private void OnDisable()
-    {
-        PlayerCatched -= OnPlayerCatched;
-    }
 
     IEnumerator Wait(float time)
     {

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Unity.VisualScripting;
 
 public class FoodPlace : MonoBehaviour
 {
@@ -61,7 +62,7 @@ public class FoodPlace : MonoBehaviour
         playerController.enabled = false;
         capsuleCollider.isTrigger = true;
 
-        Sequence sequence = DOTween.Sequence();
+        DG.Tweening.Sequence sequence = DOTween.Sequence();
 
         // playerýn positionýný new player posa eþitle animle
         sequence.Append(other.transform.DOMove(NewPlayerPosition.position, .5f));

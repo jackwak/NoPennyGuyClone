@@ -20,6 +20,7 @@ public abstract class Worker : MonoBehaviour
     public Transform _patrolPointsHolder;
     [HideInInspector]
     public int _currentPatrolIndex = 0;
+    public GameObject _rangeGO;
 
     public static System.Action PlayerCatched;
 
@@ -55,6 +56,10 @@ public abstract class Worker : MonoBehaviour
     {
         //set catch state
         _state = State.CATCH;
+        //BUNA BAK
+        _rangeGO.GetComponent<MeshCollider>().convex = false;
+
+
         Debug.Log("Catch State!");
     }
 
@@ -67,6 +72,14 @@ public abstract class Worker : MonoBehaviour
     {
         PATROL,
         CATCH
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.name.Contains("Range"))
+        {
+            OnPlayerCatched();
+        }
     }
 
 }
