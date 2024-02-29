@@ -53,6 +53,7 @@ public class FoodPlace : MonoBehaviour
 
         OldPlayerPosition = other.transform.position;
 
+        
 
         CapsuleCollider capsuleCollider = other.gameObject.GetComponent<CapsuleCollider>();
         PlayerController playerController = other.gameObject.GetComponent<PlayerController>();
@@ -104,6 +105,9 @@ public class FoodPlace : MonoBehaviour
                 color.a = 0.3f;
 
                 _rangeMaterial.color = color;
+
+                //disenable to convex range meshes for when range collider is convex it collider is being rectangle 
+                LevelManager.Instance.DisenableToConvexRangeMeshes();
 
                 // capsule colliderý aç
                 capsuleCollider.isTrigger = false;

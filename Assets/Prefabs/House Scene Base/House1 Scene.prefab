@@ -7,6 +7,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 853972873800005045, guid: bd16a248562cdc643992e8090c0a57a0, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3885194204270211010, guid: bd16a248562cdc643992e8090c0a57a0, type: 3}
+      propertyPath: m_Size.z
+      value: 0.000000009453824
+      objectReference: {fileID: 0}
+    - target: {fileID: 3885194204270211010, guid: bd16a248562cdc643992e8090c0a57a0, type: 3}
+      propertyPath: m_Center.z
+      value: -0.00000000128519
+      objectReference: {fileID: 0}
+    - target: {fileID: 3885194204270211010, guid: bd16a248562cdc643992e8090c0a57a0, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7484430313524395257, guid: bd16a248562cdc643992e8090c0a57a0, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -99,6 +115,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -307
       objectReference: {fileID: 0}
+    - target: {fileID: 8079347878527369363, guid: bd16a248562cdc643992e8090c0a57a0, type: 3}
+      propertyPath: _speed
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 8079347878527369363, guid: bd16a248562cdc643992e8090c0a57a0, type: 3}
+      propertyPath: _rotSpeed
+      value: 750
+      objectReference: {fileID: 0}
     - target: {fileID: 8418264749471204221, guid: bd16a248562cdc643992e8090c0a57a0, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -147,12 +171,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: House1 Scene
       objectReference: {fileID: 0}
+    - target: {fileID: 8616834606875310940, guid: bd16a248562cdc643992e8090c0a57a0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.21
+      objectReference: {fileID: 0}
     - target: {fileID: 8997899342482693420, guid: bd16a248562cdc643992e8090c0a57a0, type: 3}
       propertyPath: m_Name
       value: Range
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8079347877208600976, guid: bd16a248562cdc643992e8090c0a57a0, type: 3}
+    - {fileID: 8079347878146920520, guid: bd16a248562cdc643992e8090c0a57a0, type: 3}
+    - {fileID: 8079347877659042191, guid: bd16a248562cdc643992e8090c0a57a0, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: bd16a248562cdc643992e8090c0a57a0, type: 3}
 --- !u!1 &6625188314626017434 stripped
 GameObject:

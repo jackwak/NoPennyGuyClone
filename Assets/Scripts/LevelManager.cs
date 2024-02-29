@@ -36,6 +36,7 @@ public class LevelManager : MonoBehaviour
     public List<GameObject> MiniMoneysGO;
     public GameObject MoneyPanel;
     public GameObject EscapePanel;
+    public List<BoxCollider> rangeMeshes;
 
     public Button StreetButton, NextButton;
 
@@ -115,7 +116,17 @@ public class LevelManager : MonoBehaviour
             TaskFoodGO.Add(a);
         }
 
-
+        Transform securitys = currentScene.transform.Find("Securities");
+        Transform waiters = currentScene.transform.Find("Waiters");
+        //initialize all range
+        for (int i = 0; i < securitys.childCount; i++)
+        {
+             rangeMeshes.Add(securitys.GetChild(i).transform.Find("Range").GetComponent<BoxCollider>());
+        }
+        for (int i = 0; i < waiters.childCount; i++)
+        {
+             rangeMeshes.Add(waiters.GetChild(i).transform.Find("Range").GetComponent<BoxCollider>());
+        }
 
         FoodTaskPanelMove();
     }
@@ -229,6 +240,9 @@ public class LevelManager : MonoBehaviour
             foodImage.gameObject.SetActive(false);
         }
         FoodTaskPanel.transform.Find("Exit Text").gameObject.SetActive(false);
+
+        // clear range meshes
+        rangeMeshes.Clear();
 
 
         // clear foods on the table
@@ -348,5 +362,13 @@ public class LevelManager : MonoBehaviour
     public void IncreaseLastOpenedLevelIndex()
     {
         _currentHouse.LastOpenedLevelIndex++;
+    }
+
+    public void DisenableToConvexRangeMeshes()
+    {
+        foreach (var item in rangeMeshes)
+        {
+            item.isTrigger = false;
+        }
     }
 }

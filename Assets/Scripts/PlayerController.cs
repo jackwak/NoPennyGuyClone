@@ -20,30 +20,37 @@ public class PlayerController : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+
+        Worker.PlayerCatched += (Transform transform)=> { gameObject.GetComponent<PlayerController>().enabled = false; };
     }
 
     private void Update()
     {
-        hor = Input.GetAxis("Horizontal") * Time.deltaTime;
-        vert = Input.GetAxis("Vertical") * Time.deltaTime;
+        hor = Input.GetAxis("Horizontal");
+        vert = Input.GetAxis("Vertical");
 
-        _moveDirection = new Vector3(hor, 0, vert);
+        _moveDirection = new Vector3(hor * Time.deltaTime, 0, vert * Time.deltaTime);
         _moveDirection.Normalize();
 
-        rb.MovePosition(transform.position + _moveDirection * _speed * Time.deltaTime);
 
         if (_moveDirection != Vector3.zero)
         {
             animator.SetBool("IsRunning", true);
 
-            Quaternion toRotation = Quaternion.LookRotation(_moveDirection, Vector3.up);
+            Quaternion toRotation = Quaternion.LookRotation(_moveDirection * Time.deltaTime, Vector3.up);
 
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, _rotSpeed);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, _rotSpeed * Time.deltaTime);
         }
         else
         {
             animator.SetBool("IsRunning", false);
         }
+    }
+
+    private void FixedUpdate()
+    {
+        rb.MovePosition(transform.position + _moveDirection * _speed);
+
     }
 
     public void CharacterRotate(Vector3 rotateVector)
@@ -69,8 +76,16 @@ public class PlayerController : MonoBehaviour
                 LevelManager.Instance.IncreaseLastOpenedLevelIndex();
 
             }
+        }
 
+        Debug.Log(collision.collider.gameObject.name);
 
+        if (collision.collider.gameObject.CompareTag("Range"))
+        {
+            animator.SetBool("IsRunning", false);
+            Worker.PlayerCatched(transform);
         }
     }
+
+    
 }

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,13 +8,15 @@ public class Waiter : Worker
 {
     private bool _isWaiting = false;
 
+
     private void Start()
     {
         _animator = GetComponent<Animator>();
         _agent = GetComponent<NavMeshAgent>();
-        _rangeGO = transform.Find("Range").gameObject;
 
         MoveToNextPatrolPoint();
+
+        PlayerCatched += OnPlayerCatched;
     }
 
 
@@ -29,7 +32,7 @@ public class Waiter : Worker
                     // if waiter between FoodSpawner
                     if (_currentPatrolIndex % _patrolPoints.Length == 0)
                     {
-                        StartCoroutine(Wait(2f));
+                        _coroutine = StartCoroutine(Wait(2f));
                     }
                     else
                     {
@@ -38,7 +41,6 @@ public class Waiter : Worker
                 }
                 break;
             case State.CATCH:
-
 
 
                 break;
@@ -64,6 +66,28 @@ public class Waiter : Worker
         MoveToNextPatrolPoint();
 
         _isWaiting = false;
+    }
+
+    public override void OnPlayerCatched(Transform playerTransform)
+    {
+        //set catch state
+        _state = State.CATCH;
+
+        if (_coroutine != null)
+        {
+            StopCoroutine(_coroutine);
+        }
+
+        _agent.Stop();
+
+
+        //set catched anim
+        _animator.SetBool("isWalking", false);
+        _animator.Play("Idle"); // not this
+
+        transform.DOLookAt(playerTransform.position, 0.5f, AxisConstraint.Y);
+
+        
     }
 }
 

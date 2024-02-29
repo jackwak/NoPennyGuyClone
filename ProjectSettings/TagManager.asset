@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Waiter
   - Door
+  - Range
   layers:
   - Default
   - TransparentFX

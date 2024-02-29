@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -20,9 +21,9 @@ public abstract class Worker : MonoBehaviour
     public Transform _patrolPointsHolder;
     [HideInInspector]
     public int _currentPatrolIndex = 0;
-    public GameObject _rangeGO;
+    public Coroutine _coroutine;
 
-    public static System.Action PlayerCatched;
+    public static System.Action<Transform> PlayerCatched;
 
     private void OnEnable()
     {
@@ -52,21 +53,10 @@ public abstract class Worker : MonoBehaviour
         return false;
     }
 
-    public void OnPlayerCatched()
-    {
-        //set catch state
-        _state = State.CATCH;
-        //BUNA BAK
-        _rangeGO.GetComponent<MeshCollider>().convex = false;
 
+    public abstract void OnPlayerCatched(Transform playerTransform);
 
-        Debug.Log("Catch State!");
-    }
-
-    private void OnDisable()
-    {
-        PlayerCatched -= OnPlayerCatched;
-    }
+    
 
     public enum State
     {
@@ -74,14 +64,10 @@ public abstract class Worker : MonoBehaviour
         CATCH
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnDisable()
     {
-        if (collision.gameObject.name.Contains("Range"))
-        {
-            OnPlayerCatched();
-        }
+        PlayerCatched -= OnPlayerCatched;
     }
-
 }
 
 
