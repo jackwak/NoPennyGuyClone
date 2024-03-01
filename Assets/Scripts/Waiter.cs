@@ -15,8 +15,6 @@ public class Waiter : Worker
         _agent = GetComponent<NavMeshAgent>();
 
         MoveToNextPatrolPoint();
-
-        PlayerCatched += OnPlayerCatched;
     }
 
 
@@ -70,6 +68,8 @@ public class Waiter : Worker
 
     public override void OnPlayerCatched(Transform playerTransform)
     {
+        if (_state == State.CATCH) return;
+
         //set catch state
         _state = State.CATCH;
 
@@ -78,7 +78,8 @@ public class Waiter : Worker
             StopCoroutine(_coroutine);
         }
 
-        _agent.Stop();
+        //stop agent
+        _agent.isStopped = true;
 
 
         //set catched anim

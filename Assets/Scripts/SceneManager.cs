@@ -37,7 +37,6 @@ public class SceneManager : MonoBehaviour
         yield return new WaitForSeconds(.1f);
 
         SelectionController.Instance.InitializeSelectionData();
-
     }
 
     public void LoadLevel()
@@ -58,8 +57,8 @@ public class SceneManager : MonoBehaviour
         _cinemachineBrain.enabled = true;
 
         // disappear start scene
-        //Destroy(_currentScene);
-        _currentScene.gameObject.SetActive(false);
+        if (_currentScene.name.StartsWith("St")) _currentScene.gameObject.SetActive(false);
+        else Destroy(_currentScene);
 
         // appear loaded scene
         _currentScene = Instantiate(house.GetHouseScene);
@@ -91,6 +90,5 @@ public class SceneManager : MonoBehaviour
         _cinemachineBrain.enabled = true;
     }
 
-    
 
 }

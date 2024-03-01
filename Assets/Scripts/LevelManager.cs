@@ -36,16 +36,16 @@ public class LevelManager : MonoBehaviour
     public List<GameObject> MiniMoneysGO;
     public GameObject MoneyPanel;
     public GameObject EscapePanel;
+    public GameObject CatchPanel;
     public List<BoxCollider> rangeMeshes;
+    public GameObject Player;
 
-    public Button StreetButton, NextButton;
+    public Button StreetButton, StreetButton2, NextButton, TryAgainButton;
 
     public TextMeshProUGUI MoneyText;
 
     public void InitializeLevel(House house, GameObject currentScene)
     {
-        // current house missing hatas� ��nk� house start scenede ve biz onu destroyluyoruz
-
         // set loaded house
         _currentHouse = house;
 
@@ -70,8 +70,10 @@ public class LevelManager : MonoBehaviour
             MoneyTransforms.Add(item);
         }
 
+        Player = currentScene.transform.Find("Player").gameObject;
+
         // set door arrow image
-        DoorArrowImage = GameObject.Find("World Space Canvas").transform.Find("Door Arrow").GetComponent<Image>();
+        DoorArrowImage = currentScene.transform.Find("World Space Canvas").transform.Find("Door Arrow").GetComponent<Image>();
 
         // set money text
         MoneyText = currentScene.transform.Find("Canvas").transform.Find("Money Panel").transform.Find("Money Image").transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>();
@@ -86,6 +88,18 @@ public class LevelManager : MonoBehaviour
         // set button onclick
         StreetButton.onClick.AddListener(OnClickedStreetButton);
         NextButton.onClick.AddListener(OnClickedNextButton);
+
+        //set escape panel
+        CatchPanel = currentScene.transform.Find("Canvas").transform.Find("Catch Panel").gameObject;
+
+        //set buttons
+        StreetButton2 = CatchPanel.transform.Find("Street Button").GetComponent<Button>();
+        TryAgainButton = CatchPanel.transform.Find("Try Again Button").GetComponent<Button>();
+
+        //set button onclick
+        StreetButton2.onClick.AddListener(OnClickedStreetButton);
+        TryAgainButton.onClick.AddListener(OnClickedTryAgainButton);
+
 
         // set money count
         MoneyText.text = SaveManager.Instance.GetTotalMoney().ToString();
@@ -304,8 +318,22 @@ public class LevelManager : MonoBehaviour
     public void OpenEscapePanel()
     {
         EscapePanel.SetActive(true);
+        int nextLevelIndex = _currentHouse.LastOpenedLevelIndex + 2;
+        if (SelectionController.Instance.GetCurrentHouse.LevelCount < nextLevelIndex)
+        {
+            NextButton.gameObject.SetActive(false);
+
+            //start scene ekranında housea zincir koy
+        }
 
         EscapePanel.transform.DOScale(1, 1f).From(0).SetEase(Ease.OutBack).SetUpdate(true);
+    }
+
+    public void OpenCatchPanel()
+    {
+        CatchPanel.SetActive(true);
+
+        CatchPanel.transform.DOScale(1, 1f).From(0).SetEase(Ease.OutBack).SetUpdate(true);
     }
 
     public void OnClickedNextButton()
@@ -316,7 +344,7 @@ public class LevelManager : MonoBehaviour
 
         EscapePanel?.SetActive(false);
 
-
+        // escape panel açılırken eğer bu son levelsa ifi bizi diğer house geçirme zahmetinden kurtaracağı sadece elsein içindekini yazabilirim
         if (SelectionController.Instance.GetCurrentHouse.LevelCount < nextLevel)
         {
             // reset levels
@@ -339,9 +367,16 @@ public class LevelManager : MonoBehaviour
 
             SceneManager.Instance.LoadLevel();
         }
+    }
+
+    public void OnClickedTryAgainButton()
+    {
+        Time.timeScale = 1f;
+
+        House house = SelectionController.Instance.GetCurrentHouse;
+
 
         SceneManager.Instance.LoadLevel();
-        
     }
 
     public void OnClickedStreetButton()
@@ -355,8 +390,6 @@ public class LevelManager : MonoBehaviour
         SelectionController.Instance.SetSelectionControllerToStart();
 
         SceneManager.Instance.LoadStartScene();
-
-        //YEN�DEN AYNI LEVELA BA�LADI�INDA KARAKTERLER�N OLDU�U YERLER� AYNI AYARLA
     }
 
     public void IncreaseLastOpenedLevelIndex()
@@ -371,4 +404,6 @@ public class LevelManager : MonoBehaviour
             item.isTrigger = false;
         }
     }
+
+    
 }

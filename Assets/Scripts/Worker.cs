@@ -8,7 +8,6 @@ public abstract class Worker : MonoBehaviour
 {
     [HideInInspector]
     public State _state = new State();
-    [HideInInspector]
     public NavMeshAgent _agent;
     [HideInInspector]
     public Animator _animator;

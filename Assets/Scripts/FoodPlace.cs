@@ -53,8 +53,6 @@ public class FoodPlace : MonoBehaviour
 
         OldPlayerPosition = other.transform.position;
 
-        
-
         CapsuleCollider capsuleCollider = other.gameObject.GetComponent<CapsuleCollider>();
         PlayerController playerController = other.gameObject.GetComponent<PlayerController>();
         Animator animator = other.GetComponent<Animator>();
@@ -112,14 +110,9 @@ public class FoodPlace : MonoBehaviour
                 // capsule colliderý aç
                 capsuleCollider.isTrigger = false;
                 playerController.enabled = true;
-
-
             });
 
         }));
-
-
-
     }
 
 
@@ -134,6 +127,5 @@ public class FoodPlace : MonoBehaviour
         int miniMoneyCount = food.Price / 10;
 
         LevelManager.Instance.MoneyAnimation(miniMoneyCount);
-
     }
 }
