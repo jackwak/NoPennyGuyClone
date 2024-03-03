@@ -6,7 +6,7 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 public class PlayerController : MonoBehaviour
 {
     private Animator animator;
-    private Rigidbody rb;
+    public Rigidbody rb;
 
     private float hor;
     private float vert;
@@ -16,12 +16,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _speed;
     [SerializeField] private float _rotSpeed;
 
-    private State state;
+    private Vector3 _initialPosition;
 
-    private void Start()
+    private State state;
+    private void Awake()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+
+        _initialPosition = rb.position;
+    }
+
+    private void Start()
+    {
+        
     }
 
     private void Update()
@@ -91,5 +99,10 @@ public class PlayerController : MonoBehaviour
     {
         PATROL,
         CATCH
+    }
+
+    public void ResetMovement()
+    {
+        rb.MovePosition(_initialPosition);
     }
 }

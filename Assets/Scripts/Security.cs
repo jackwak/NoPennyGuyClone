@@ -41,7 +41,8 @@ public class Security : Worker
                     _isRotating = true;
                     float a = Random.Range(1, 3);
                     _animator.SetBool("isWalking", false);
-                    _tween = transform.DOLookAt(_lookPoint.position, a).SetEase(Ease.Linear).OnComplete(() => _coroutine = StartCoroutine(Wait()));
+                    Quaternion firstRotation = transform.rotation;
+                    _tween = transform.DOLookAt(_lookPoint.position, a).SetEase(Ease.Linear).OnComplete(() => _coroutine = StartCoroutine(Wait(firstRotation)));
                 }
                 break;
             case State.CATCH:
@@ -59,9 +60,24 @@ public class Security : Worker
         
     }
 
-    IEnumerator Wait()
+    IEnumerator Wait(Quaternion firstRotation)
     {
-        float a = Random.Range(3,5);
+        float a = Random.Range(5,7);
+
+        int random = Random.Range(0, 2);
+        if (random == 0)
+        {
+            // look around
+            Quaternion diff = Quaternion.Inverse(transform.rotation) * firstRotation;
+
+            Quaternion randomQuaternion = Quaternion.Euler(transform.rotation.x, Random.Range(0, diff.y), transform.rotation.z);
+
+
+            transform.DORotateQuaternion(randomQuaternion, 1f).OnComplete(()=>
+            {
+                transform.DORotateQuaternion(Quaternion.Euler(transform.rotation.x, Random.Range(0, diff.y), transform.rotation.z), 1f);
+            });
+        }
 
         yield return new WaitForSeconds(a);
         if(isActiveAndEnabled)

@@ -340,6 +340,7 @@ public class LevelManager : MonoBehaviour
     {
         Time.timeScale = 1f;
 
+
         int nextLevel = SaveManager.Instance.LastOpenedHouseIndex;
 
         EscapePanel?.SetActive(false);
@@ -359,6 +360,16 @@ public class LevelManager : MonoBehaviour
             House house = SelectionController.Instance.GetCurrentHouse;
 
             SceneManager.Instance.LoadLevel();
+
+            Player.GetComponent<PlayerController>().enabled = false;
+            StartCoroutine(Delay());
+
+
+            /*Destroy(Player.GetComponent<Rigidbody>());
+            Rigidbody rigidbody = Player.AddComponent<Rigidbody>();
+            Player.GetComponent<PlayerController>().rb = rigidbody;
+            rigidbody.drag = 100;*/
+
         }
         else
         {
@@ -366,6 +377,16 @@ public class LevelManager : MonoBehaviour
 
 
             SceneManager.Instance.LoadLevel();
+
+
+            Player.GetComponent<PlayerController>().enabled = false;
+            StartCoroutine(Delay());
+
+            /*
+            Destroy(Player.GetComponent<Rigidbody>());
+            Rigidbody rigidbody = Player.AddComponent<Rigidbody>();
+            Player.GetComponent<PlayerController>().rb = rigidbody;
+            rigidbody.drag = 100;*/
         }
     }
 
@@ -405,5 +426,10 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    
+    IEnumerator Delay()
+    {
+        yield return new WaitForSeconds(.5f);
+
+        Player.GetComponent<PlayerController>().enabled = true;
+    }
 }
