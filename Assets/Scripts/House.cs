@@ -9,7 +9,7 @@ public class House : MonoBehaviour
     private CinemachineVirtualCamera camera;
     public int LevelCount = 5;
     public int LastOpenedLevelIndex = 0; // bunu playerprefle tutman gerekebilir
-    [HideInInspector] public bool IsOpen;
+    [HideInInspector] public bool IsOpen; //bunu da
     public Level[] Levels;
 
     public GameObject GetHouseScene { get { return _houseScene; } }

@@ -89,6 +89,4 @@ public class SceneManager : MonoBehaviour
         _cinemachineBrain.m_DefaultBlend.m_Time = 2;
         _cinemachineBrain.enabled = true;
     }
-
-
 }

@@ -10,7 +10,7 @@ public class Security : Worker
     private Transform _lookPoint;
     private bool _isRotating = false;
     public Coroutine _coroutine;
-    private Tween _tween;
+    private List<Tween> _tweens = new List<Tween>();
     [SerializeField] float _stoppingDistance;
 
 
@@ -42,7 +42,7 @@ public class Security : Worker
                     float a = Random.Range(1, 3);
                     _animator.SetBool("isWalking", false);
                     Quaternion firstRotation = transform.rotation;
-                    _tween = transform.DOLookAt(_lookPoint.position, a).SetEase(Ease.Linear).OnComplete(() => _coroutine = StartCoroutine(Wait(firstRotation)));
+                    _tweens.Add(transform.DOLookAt(_lookPoint.position, a).SetEase(Ease.Linear).OnComplete(() => _coroutine = StartCoroutine(Wait(firstRotation))));
                 }
                 break;
             case State.CATCH:
@@ -68,20 +68,32 @@ public class Security : Worker
         if (random == 0)
         {
             // look around
-            Quaternion diff = Quaternion.Inverse(transform.rotation) * firstRotation;
+            Quaternion lookedRotation = transform.rotation;
 
-            Quaternion randomQuaternion = Quaternion.Euler(transform.rotation.x, Random.Range(0, diff.y), transform.rotation.z);
+            // random rotation value
+            float t = Random.value;
+            Quaternion randomQuaternion = Quaternion.Lerp(lookedRotation, firstRotation, t);
 
 
-            transform.DORotateQuaternion(randomQuaternion, 1f).OnComplete(()=>
+            float delayTime = Random.Range(a * 1 / 10, a * 3 / 10);
+            _tweens.Add(transform.DORotateQuaternion(randomQuaternion, 1f).SetDelay(delayTime).OnComplete(() =>
             {
-                transform.DORotateQuaternion(Quaternion.Euler(transform.rotation.x, Random.Range(0, diff.y), transform.rotation.z), 1f);
-            });
+                int random2 = Random.Range(0, 2);
+
+                if (random2 == 0)
+                {
+                    float t2 = Random.value;
+                    Quaternion randomQuaternion2 = Quaternion.Lerp(randomQuaternion, lookedRotation, t2);
+
+                    float delayTime2 = Random.Range(a * 1 / 10, a * 3 / 10);
+
+                    transform.DORotateQuaternion(randomQuaternion2, 1f).SetDelay(delayTime2);
+                }
+            }));
         }
 
         yield return new WaitForSeconds(a);
-        if(isActiveAndEnabled)
-        MoveToNextPatrolPoint();
+        if(isActiveAndEnabled) MoveToNextPatrolPoint();
     }
 
     public override void OnPlayerCatched(Transform playerTransform)
@@ -118,11 +130,11 @@ public class Security : Worker
         }
 
         // kill tween for oncomplete is problem
-        _tween.Kill();
-
-        
+        foreach (Tween t in _tweens)
+        {
+            t.Kill();
+        }
     }
-
 }
 
 
