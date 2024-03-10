@@ -62,6 +62,7 @@ public class SelectionController : MonoBehaviour
         _nextButton.onClick.AddListener(NextCamera);
         _playButton2.onClick.AddListener(SceneManager.Instance.LoadLevel);
         _previousButton.onClick.AddListener(PreviousCamera);
+        _playButton.onClick.AddListener(SceneManager.Instance.LoadLevel);
 
         _arrowRectTransform = startScene.transform.Find("World Space Canvas").transform.GetChild(0).GetComponent<RectTransform>();
 

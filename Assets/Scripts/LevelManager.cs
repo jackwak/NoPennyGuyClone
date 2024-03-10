@@ -323,6 +323,7 @@ public class LevelManager : MonoBehaviour
         {
             NextButton.gameObject.SetActive(false);
 
+            SaveManager.Instance.LastOpenedHouseIndex++;
             //start scene ekranında housea zincir koy
         }
 
@@ -364,12 +365,6 @@ public class LevelManager : MonoBehaviour
             Player.GetComponent<PlayerController>().enabled = false;
             StartCoroutine(Delay());
 
-
-            /*Destroy(Player.GetComponent<Rigidbody>());
-            Rigidbody rigidbody = Player.AddComponent<Rigidbody>();
-            Player.GetComponent<PlayerController>().rb = rigidbody;
-            rigidbody.drag = 100;*/
-
         }
         else
         {
@@ -381,12 +376,6 @@ public class LevelManager : MonoBehaviour
 
             Player.GetComponent<PlayerController>().enabled = false;
             StartCoroutine(Delay());
-
-            /*
-            Destroy(Player.GetComponent<Rigidbody>());
-            Rigidbody rigidbody = Player.AddComponent<Rigidbody>();
-            Player.GetComponent<PlayerController>().rb = rigidbody;
-            rigidbody.drag = 100;*/
         }
     }
 
