@@ -691,6 +691,7 @@ MonoBehaviour:
   TutorialPanel: {fileID: 0}
   rangeMeshes: []
   Player: {fileID: 0}
+  FloatingJoystick: {fileID: 0}
   StreetButton: {fileID: 0}
   StreetButton2: {fileID: 0}
   NextButton: {fileID: 0}

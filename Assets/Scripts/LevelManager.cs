@@ -60,7 +60,7 @@ public class LevelManager : MonoBehaviour
         MoneyPanel = currentScene.transform.Find("Canvas").transform.Find("Money Panel").gameObject;
         MoneyImage = MoneyPanel.transform.Find("Money Image");
 
-        FloatingJoystick = currentScene.transform.Find("Canvas").transform.Find("Floating Joystic").gameObject;
+        FloatingJoystick = currentScene.transform.Find("Canvas").transform.Find("Floating Joystick").gameObject;
 
         Transform miniMoneyHolder = MoneyPanel.transform.Find("Mini Money Holder");
         foreach (Transform item in miniMoneyHolder)

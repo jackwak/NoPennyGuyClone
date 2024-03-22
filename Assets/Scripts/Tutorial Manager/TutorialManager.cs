@@ -26,6 +26,8 @@ public class TutorialManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        //ResetTutorails();
     }
 
     private void Update()
@@ -45,12 +47,16 @@ public class TutorialManager : MonoBehaviour
         for (int i = 0; i < Tutorial.Count; i++)
         {
             string tutName = "Tutorial" + (i + 1);
-            PlayerPrefs.SetInt(tutName, 0);
             if (!PlayerPrefs.HasKey(tutName))
             {
                 PlayerPrefs.SetInt(tutName, 0);
             }
         }
+    }
+
+    public void ResetTutorails()
+    {
+        PlayerPrefs.DeleteAll();
     }
 
     public void GetTutorial(int id)
