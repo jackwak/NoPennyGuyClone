@@ -24,6 +24,7 @@ public class SaveManager : MonoBehaviour
 
     private void Start()
     {
+        PlayerPrefs.SetInt("MoneyCount", 0);
         if (!PlayerPrefs.HasKey("MoneyCount"))
         {
             PlayerPrefs.SetInt("MoneyCount", 0);

@@ -10,7 +10,7 @@ public class TutorialManager : MonoBehaviour
     public RectTransform Hand;
 
     public static TutorialManager Instance;
-    [SerializeField] private Tutorial[] _tutorials;
+    public List<Tutorial> Tutorial;
     private Tutorial _currentTutorial;
     private Tween _currentTween;
     private Sequence _handSequence;
@@ -28,19 +28,6 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        for (int i = 0; i < _tutorials.Length; i++)
-        {
-            string tutName = "Tutorial" + i;
-
-            if (!PlayerPrefs.HasKey(tutName))
-            {
-                PlayerPrefs.SetInt(tutName, 0);
-            }
-        }
-    }
-
     private void Update()
     {
         if (_currentTutorial != null)
@@ -53,17 +40,28 @@ public class TutorialManager : MonoBehaviour
         
     }
 
+    public void CheckTutorials()
+    {
+        for (int i = 0; i < Tutorial.Count; i++)
+        {
+            string tutName = "Tutorial" + (i + 1);
+            PlayerPrefs.SetInt(tutName, 0);
+            if (!PlayerPrefs.HasKey(tutName))
+            {
+                PlayerPrefs.SetInt(tutName, 0);
+            }
+        }
+    }
+
     public void GetTutorial(int id)
     {
-        if (PlayerPrefs.GetInt("Tutorial" + id) != 1)
+        if (PlayerPrefs.GetInt("Tutorial" + (id + 1)) != 1)
         {
-            PlayerPrefs.SetInt("Tutorial" + id, 1);
-            Debug.Log(PlayerPrefs.GetInt("Tutorial0"));
+            PlayerPrefs.SetInt("Tutorial" + (id + 1), 1);
             Time.timeScale = 0;
 
-            _currentTutorial = _tutorials[id];
-            _currentTutorial.tutorialGO.SetActive(true);
-
+            _currentTutorial = Tutorial[id];
+            _currentTutorial.tutorialGO?.SetActive(true);
             GetTutorialStep(0);
 
             _currentTutorialStepId = 0;
@@ -83,7 +81,7 @@ public class TutorialManager : MonoBehaviour
         _currentTween?.Kill();
         _handSequence?.Kill();
 
-        if (_currentTutorial.step[id].HandRectTransforms.Length == 1)
+        if (_currentTutorial.step[id].HandRectTransforms.Count == 1)
         {
             Hand.position = _currentTutorial.step[id].HandRectTransforms[0].position;
             _currentTween = Hand.DOScale(Hand.localScale, 1f).From(Hand.localScale * 0.75f).SetLoops(-1, LoopType.Yoyo).SetUpdate(true).SetEase(Ease.Linear);
@@ -97,7 +95,7 @@ public class TutorialManager : MonoBehaviour
 
             // Sequence oluþtur
             _handSequence = DOTween.Sequence();
-            int handPositionCount = _currentTutorial.step[id].HandRectTransforms.Length;
+            int handPositionCount = _currentTutorial.step[id].HandRectTransforms.Count;
             for (int i = 0; i < handPositionCount; i++)
             {
                 // Her pozisyon için Hand.DOMove animasyonu Sequence'e eklenir
@@ -110,7 +108,7 @@ public class TutorialManager : MonoBehaviour
     public void NextTutorialStep()
     {
         _currentTutorialStepId++;
-        if (_currentTutorialStepId < _currentTutorial.step.Length)
+        if (_currentTutorialStepId < _currentTutorial.step.Count)
         {
             ClearTutorialStep(--_currentTutorialStepId);
             GetTutorialStep(_currentTutorialStepId);
@@ -142,5 +140,35 @@ public class TutorialManager : MonoBehaviour
         _currentTutorial = null;
         _currentTween = null;
         _handSequence = null;
+    }
+
+    public void SetTutorials(Transform tutorialPanelTransfrom)
+    {
+        //set
+        Hand = tutorialPanelTransfrom.transform.Find("Hand Cursor").GetComponent<RectTransform>();
+        for (int i = 0; i < tutorialPanelTransfrom.childCount - 1; i++)
+        {
+            Tutorial tutorial = new Tutorial();
+            Tutorial.Add(tutorial);
+
+            Transform tutorialTransform = tutorialPanelTransfrom.transform.Find("Tutorial" + (i + 1));
+
+            tutorial.tutorialGO = tutorialTransform.gameObject;
+
+            for (int j = 0; j < tutorialTransform.childCount; j++)
+            {
+                TutorialStep tutorialStep = new TutorialStep();
+                tutorial.step.Add(tutorialStep);
+
+                Transform tutorialStepTransform = tutorialTransform.transform.Find("Step" + (j + 1));
+                tutorialStep.stepGO = tutorialStepTransform.gameObject;
+
+                for (int h = 0; h < tutorialStepTransform.childCount - 1; h++)
+                {
+                    tutorialStep.HandRectTransforms.Add(tutorialStepTransform.GetChild(h).GetComponent<RectTransform>());
+                }
+            }
+        }
+
     }
 }

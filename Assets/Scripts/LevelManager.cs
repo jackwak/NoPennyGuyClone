@@ -37,8 +37,10 @@ public class LevelManager : MonoBehaviour
     public GameObject MoneyPanel;
     public GameObject EscapePanel;
     public GameObject CatchPanel;
+    public GameObject TutorialPanel;
     public List<BoxCollider> rangeMeshes;
     public GameObject Player;
+    public GameObject FloatingJoystick;
 
     public Button StreetButton, StreetButton2, NextButton, TryAgainButton;
 
@@ -57,6 +59,8 @@ public class LevelManager : MonoBehaviour
         //set money panel
         MoneyPanel = currentScene.transform.Find("Canvas").transform.Find("Money Panel").gameObject;
         MoneyImage = MoneyPanel.transform.Find("Money Image");
+
+        FloatingJoystick = currentScene.transform.Find("Canvas").transform.Find("Floating Joystic").gameObject;
 
         Transform miniMoneyHolder = MoneyPanel.transform.Find("Mini Money Holder");
         foreach (Transform item in miniMoneyHolder)
@@ -99,6 +103,11 @@ public class LevelManager : MonoBehaviour
         //set button onclick
         StreetButton2.onClick.AddListener(OnClickedStreetButton);
         TryAgainButton.onClick.AddListener(OnClickedTryAgainButton);
+
+        //set tutorial panel
+        TutorialPanel = currentScene.transform.Find("Canvas").transform.Find("Tutorial Panel").gameObject;
+        TutorialManager.Instance.SetTutorials(TutorialPanel.transform);
+        TutorialManager.Instance.CheckTutorials();
 
 
         // set money count
@@ -224,6 +233,9 @@ public class LevelManager : MonoBehaviour
 
     public void FoodTaskPanelMove()
     {
+        FloatingJoystick.SetActive(false);
+        Player.GetComponent<PlayerController>().enabled = false;
+
         //set to middle of camera the Food task panel
         Vector3 foodTaskPanelPosition = FoodTaskPanel.transform.position;
         Vector3 foodTaskPanelScale = FoodTaskPanel.transform.localScale;
@@ -235,7 +247,11 @@ public class LevelManager : MonoBehaviour
         Time.timeScale = 0;
 
         FoodTaskPanel.transform.DOMove(foodTaskPanelPosition, 1f).SetUpdate(true).SetDelay(2f);
-        FoodTaskPanel.transform.DOScale(foodTaskPanelScale, 1f).SetUpdate(true).SetDelay(2f).OnComplete(()=>TutorialManager.Instance.GetTutorial(0));
+        FoodTaskPanel.transform.DOScale(foodTaskPanelScale, 1f).SetUpdate(true).SetDelay(2f).OnComplete(()=>
+        {
+            FloatingJoystick.SetActive(true);
+            Player.GetComponent<PlayerController>().enabled = true;
+            TutorialManager.Instance.GetTutorial(0); });
     }
 
 
@@ -363,7 +379,7 @@ public class LevelManager : MonoBehaviour
             SceneManager.Instance.LoadLevel();
 
             Player.GetComponent<PlayerController>().enabled = false;
-            StartCoroutine(Delay());
+            StartCoroutine(Delay(.5f));
 
         }
         else
@@ -375,7 +391,7 @@ public class LevelManager : MonoBehaviour
 
 
             Player.GetComponent<PlayerController>().enabled = false;
-            StartCoroutine(Delay());
+            StartCoroutine(Delay(.5f));
         }
     }
 
@@ -415,9 +431,9 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    IEnumerator Delay()
+    IEnumerator Delay(float delayTime)
     {
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(delayTime);
 
         Player.GetComponent<PlayerController>().enabled = true;
     }

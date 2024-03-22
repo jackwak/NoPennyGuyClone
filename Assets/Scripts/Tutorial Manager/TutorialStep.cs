@@ -5,6 +5,6 @@ using UnityEngine;
 [System.Serializable]
 public class TutorialStep
 {
-    public RectTransform[] HandRectTransforms;
+    public List<RectTransform> HandRectTransforms = new List<RectTransform>();
     public GameObject stepGO;
 }

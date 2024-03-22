@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class Tutorial
 {
-    public TutorialStep[] step;
+    public List<TutorialStep> step = new List<TutorialStep>();
     public GameObject tutorialGO;
 
 }

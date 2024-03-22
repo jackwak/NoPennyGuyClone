@@ -6,7 +6,7 @@ using static UnityEngine.UIElements.UxmlAttributeDescription;
 public class PlayerController : MonoBehaviour
 {
     private Animator animator;
-    public Rigidbody rb;
+    [HideInInspector] public Rigidbody rb;
 
     private float hor;
     private float vert;
@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _rotSpeed;
 
     private Vector3 _initialPosition;
+    [SerializeField] private FloatingJoystick _joystick;
 
     private State state;
     private void Awake()
@@ -27,39 +28,37 @@ public class PlayerController : MonoBehaviour
         _initialPosition = rb.position;
     }
 
-    private void Start()
-    {
-        
-    }
 
     private void Update()
     {
-                hor = Input.GetAxis("Horizontal");
-                vert = Input.GetAxis("Vertical");
+        /*hor = Input.GetAxis("Horizontal");
+        vert = Input.GetAxis("Vertical");
 
-                _moveDirection = new Vector3(hor * Time.deltaTime, 0, vert * Time.deltaTime);
-                _moveDirection.Normalize();
+        _moveDirection = new Vector3(hor * Time.deltaTime, 0, vert * Time.deltaTime);
+        _moveDirection.Normalize();*/
 
+        
 
-                if (_moveDirection != Vector3.zero)
-                {
-                    animator.SetBool("IsRunning", true);
+        if (_moveDirection != Vector3.zero)
+        {
+            animator.SetBool("IsRunning", true);
 
-                    Quaternion toRotation = Quaternion.LookRotation(_moveDirection * Time.deltaTime, Vector3.up);
+            Quaternion toRotation = Quaternion.LookRotation(_moveDirection * Time.deltaTime, Vector3.up);
 
-                    transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, _rotSpeed * Time.deltaTime);
-                }
-                else
-                {
-                    animator.SetBool("IsRunning", false);
-                }
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, _rotSpeed * Time.deltaTime);
+        }
+        else
+        {
+            animator.SetBool("IsRunning", false);
+        }
         
     }
 
     private void FixedUpdate()
     {
-        rb.MovePosition(transform.position + _moveDirection * _speed);
+        _moveDirection = (Vector3.forward * _joystick.Vertical + Vector3.right * _joystick.Horizontal).normalized;
 
+        rb.MovePosition(transform.position + _moveDirection * _speed * Time.fixedDeltaTime);
     }
 
     public void CharacterRotate(Vector3 rotateVector)
